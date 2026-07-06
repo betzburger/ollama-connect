@@ -16,7 +16,8 @@ rm -rf "$APPDIR"
 mkdir -p "$APPDIR"
 cp -r "$APP_IMAGE_SRC"/. "$APPDIR"/
 
-BIN_NAME=$(find "$APPDIR/bin" -maxdepth 1 -type f -perm -u+x | head -1 | xargs -n1 basename)
+BIN_PATH=$(find "$APPDIR/bin" -maxdepth 1 -type f -perm -u+x | head -1)
+BIN_NAME=$(basename "$BIN_PATH")
 echo "Launcher binary: $BIN_NAME"
 
 cp composeApp/src/androidMain/res/mipmap-xxxhdpi/ic_launcher.png "$APPDIR/$BIN_NAME.png"
@@ -25,7 +26,7 @@ cat > "$APPDIR/$BIN_NAME.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Name=$APP_NAME
-Exec=$BIN_NAME
+Exec="$BIN_NAME"
 Icon=$BIN_NAME
 Categories=Utility;
 EOF
