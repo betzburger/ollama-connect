@@ -105,11 +105,13 @@ compose.desktop {
             windows {
                 menuGroup = "Ollama Connect"
                 upgradeUuid = "E3E94DD0-0C05-48FB-9384-4ED6DAA96608"
+                iconFile.set(project.file("icons/AppIcon.ico"))
             }
 
             macOS {
                 bundleID = "com.ollamaconnect"
                 dockName = "Ollama Connect"
+                iconFile.set(project.file("icons/AppIcon.icns"))
             }
         }
 
