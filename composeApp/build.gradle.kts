@@ -112,6 +112,10 @@ compose.desktop {
                 dockName = "Ollama Connect"
             }
         }
+
+        buildTypes.release.proguard {
+            configurationFiles.from("proguard-desktop-rules.pro")
+        }
     }
 }
 
