@@ -1,0 +1,14 @@
+.gradle
+build/
+.idea
+*.iml
+local.properties
+.DS_Store
+
+# Android-specific
+.navigation
+captures
+.externalNativeBuild
+
+# Desktop-specific
+composeApp/build

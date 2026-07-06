@@ -1,0 +1,108 @@
+name: Desktop Builds (Windows / Linux x64 / Linux ARM64 / Uber-JAR)
+
+# macOS (Apple Silicon dmg) is intentionally NOT built here — it's built
+# locally on the maintainer's Mac to avoid the 10x minute multiplier that
+# macOS runners cost on GitHub Actions.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  windows-msi:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-34'
+
+      - name: Build MSI
+        shell: bash
+        run: ./gradlew :composeApp:packageReleaseMsi --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64-msi
+          path: composeApp/build/compose/binaries/**/msi/*.msi
+
+  linux-x64-appimage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-34'
+
+      - name: Build app-image
+        run: ./gradlew :composeApp:createReleaseDistributable --no-daemon
+
+      - name: Package AppImage (x86_64)
+        run: .github/scripts/package-appimage.sh x86_64
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-x64-appimage
+          path: '*.AppImage'
+
+  linux-arm64-appimage:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-34'
+
+      - name: Build app-image
+        run: ./gradlew :composeApp:createReleaseDistributable --no-daemon
+
+      - name: Package AppImage (aarch64 / Raspberry Pi)
+        run: .github/scripts/package-appimage.sh aarch64
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-arm64-appimage
+          path: '*.AppImage'
+
+  uber-jar-all-platforms:
+    # Runs anywhere with a JVM (Windows/macOS/Linux, x64/arm64) - bundles
+    # Skiko's native library for every platform, not just the build host's.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-34'
+
+      - name: Build all-platforms uber jar
+        run: ./gradlew :composeApp:packageUberJarForAllPlatforms --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uber-jar-all-platforms
+          path: composeApp/build/libs/ollama-connect-all-platforms-*.jar
