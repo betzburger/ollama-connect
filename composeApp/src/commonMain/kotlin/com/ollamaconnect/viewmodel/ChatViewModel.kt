@@ -11,6 +11,7 @@ import com.ollamaconnect.store.ModelPresetStore
 import com.ollamaconnect.store.PersonaStore
 import com.ollamaconnect.generateUUID
 import io.ktor.client.*
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.http.HttpStatusCode
@@ -35,6 +36,14 @@ class ChatViewModel(
                 prettyPrint = true
                 isLenient = true
             })
+        }
+        // Local LLM inference (especially "thinking" models) can take far
+        // longer than an HTTP client's default read timeout (e.g. OkHttp's
+        // 10s) before the first byte of the response arrives.
+        install(HttpTimeout) {
+            requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
+            socketTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
+            connectTimeoutMillis = 10_000
         }
     }
 

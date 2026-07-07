@@ -20,3 +20,11 @@
 -keepnames class * implements io.ktor.client.HttpClientEngineContainer
 -keep class * implements io.ktor.serialization.kotlinx.KotlinxSerializationExtensionProvider
 -keepnames class * implements io.ktor.serialization.kotlinx.KotlinxSerializationExtensionProvider
+
+# kotlinx-coroutines-swing's SwingDispatcherFactory is likewise only found
+# via META-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory,
+# not a direct reference; keep it so Dispatchers.Main (used by
+# viewModelScope) resolves instead of crashing with "Module with the Main
+# dispatcher is missing".
+-keep class * implements kotlinx.coroutines.internal.MainDispatcherFactory
+-keepnames class * implements kotlinx.coroutines.internal.MainDispatcherFactory
