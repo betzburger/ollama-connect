@@ -4,6 +4,13 @@ A fast, private, cloud-free chat client for your own [Ollama](https://ollama.com
 
 Talk to any model your server hosts, right from your Mac, PC, phone, or tablet — no data ever leaves your network.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/chat-view.png" width="49%" alt="Streaming chat with Markdown rendering">
+  <img src="docs/screenshots/persona-editor.png" width="49%" alt="Assistant personality editor">
+</p>
+
 ## Features
 
 - **Two backends, one app** — connect to a native Ollama server or an OpenAI-compatible `llama-server` (`/v1/chat/completions`); switch per connection.
