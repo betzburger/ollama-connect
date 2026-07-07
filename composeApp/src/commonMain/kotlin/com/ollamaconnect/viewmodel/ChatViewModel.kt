@@ -21,6 +21,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
+import ollama_connect.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.getString
 
 class ChatViewModel(
     private val storage: LocalStorage,
@@ -106,15 +108,6 @@ class ChatViewModel(
     val canSend: Boolean
         get() = inputText.trim().isNotEmpty() && isConnected && !isGenerating && selectedModel.isNotEmpty()
 
-    val contextInfo: String?
-        get() {
-            return if (contextMessageLimit > 0 && messages.size > contextMessageLimit) {
-                "Kontext: letzte $contextMessageLimit von ${messages.size} Nachrichten"
-            } else {
-                null
-            }
-        }
-
     val connectionService: ChatService?
         get() {
             val trimmedHost = host.trim()
@@ -155,7 +148,9 @@ class ChatViewModel(
     fun connect() {
         val service = connectionService
         if (service == null) {
-            errorMessage = "Bitte eine gültige IP-Adresse und einen Port eingeben."
+            viewModelScope.launch {
+                errorMessage = getString(Res.string.error_invalid_host_port)
+            }
             return
         }
 
@@ -172,7 +167,7 @@ class ChatViewModel(
                 saveCurrentHost()
             } catch (e: Exception) {
                 isConnected = false
-                errorMessage = e.message ?: "Unbekannter Fehler bei der Verbindung."
+                errorMessage = e.message ?: getString(Res.string.error_unknown_connection)
             } finally {
                 isLoadingModels = false
             }
@@ -257,22 +252,28 @@ class ChatViewModel(
         saveConversations()
     }
 
-    fun exportConversation(conversation: Conversation): String {
+    fun exportConversation(
+        conversation: Conversation,
+        modelLabel: String,
+        userLabel: String,
+        assistantLabel: String,
+        exportedFooter: String
+    ): String {
         val lines = mutableListOf<String>()
         lines.add("# ${conversation.title}")
-        lines.add("Modell: ${conversation.modelName} | ${com.ollamaconnect.formatDateTime(conversation.createdAt)}")
+        lines.add("$modelLabel: ${conversation.modelName} | ${com.ollamaconnect.formatDateTime(conversation.createdAt)}")
         if (conversation.systemPrompt.isNotEmpty()) {
             lines.add("\n> System: ${conversation.systemPrompt}")
         }
         lines.add("")
         conversation.persistedMessages.sortedBy { it.sortOrder }.forEach { msg ->
-            val role = if (msg.role == "user") "Du" else "Assistent"
+            val role = if (msg.role == "user") userLabel else assistantLabel
             lines.add("**$role:**")
             lines.add(msg.content)
             lines.add("")
         }
         lines.add("---")
-        lines.add("_Exportiert aus Ollama Connect (Kotlin)_")
+        lines.add("_${exportedFooter}_")
         return lines.joinToString("\n")
     }
 
@@ -337,7 +338,7 @@ class ChatViewModel(
                         persistMessages()
                     }
                 } else {
-                    errorMessage = e.message ?: "Generierungsfehler."
+                    errorMessage = e.message ?: getString(Res.string.error_generation_failed)
                     if (messages.size > assistantIndex && messages[assistantIndex].content.isEmpty()) {
                         messages.removeAt(assistantIndex)
                     }
@@ -376,7 +377,7 @@ class ChatViewModel(
 
     // MARK: - Persistence Helpers
 
-    private fun persistMessages() {
+    private suspend fun persistMessages() {
         if (currentConversation == null) {
             val title = generateTitle()
             val conv = Conversation(
@@ -423,8 +424,9 @@ class ChatViewModel(
         saveConversations()
     }
 
-    private fun generateTitle(): String {
-        val firstUserMsg = messages.firstOrNull { it.role == MessageRole.USER.rawValue }?.content ?: "Neuer Chat"
+    private suspend fun generateTitle(): String {
+        val firstUserMsg = messages.firstOrNull { it.role == MessageRole.USER.rawValue }?.content
+            ?: getString(Res.string.new_chat_default_title)
         val trimmed = firstUserMsg.trim()
         return if (trimmed.length <= 50) trimmed else trimmed.take(47) + "…"
     }

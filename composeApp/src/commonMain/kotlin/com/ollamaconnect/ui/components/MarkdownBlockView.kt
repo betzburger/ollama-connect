@@ -23,6 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import ollama_connect.composeapp.generated.resources.Res
+import ollama_connect.composeapp.generated.resources.content_desc_copy_code
+import org.jetbrains.compose.resources.stringResource
 
 sealed class MarkdownBlock {
     data class Paragraph(val text: String) : MarkdownBlock()
@@ -189,7 +192,7 @@ fun CodeBlockView(
                 ) {
                     Icon(
                         imageVector = if (copied) Icons.Default.Check else Icons.Default.ContentCopy,
-                        contentDescription = "Code kopieren",
+                        contentDescription = stringResource(Res.string.content_desc_copy_code),
                         tint = if (copied) Color.Green else (if (isUserBubble) Color.White else MaterialTheme.colorScheme.onSurfaceVariant).copy(alpha = 0.6f),
                         modifier = Modifier.size(14.dp)
                     )

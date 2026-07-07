@@ -29,6 +29,8 @@ import com.ollamaconnect.store.PersonaStore
 import com.ollamaconnect.ui.screens.*
 import com.ollamaconnect.ui.theme.*
 import com.ollamaconnect.viewmodel.ChatViewModel
+import ollama_connect.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 enum class MobileScreen {
     LIST, DETAIL
@@ -209,7 +211,7 @@ fun DetailTopBar(
                     modifier = Modifier.clickable { modelMenuExpanded = true }
                 ) {
                     Text(
-                        text = viewModel.selectedModel.ifEmpty { "Wähle Modell" },
+                        text = viewModel.selectedModel.ifEmpty { stringResource(Res.string.detail_choose_model) },
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
@@ -239,7 +241,7 @@ fun DetailTopBar(
         navigationIcon = {
             if (isMobile) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Zurück")
+                    Icon(Icons.Default.ArrowBack, contentDescription = stringResource(Res.string.content_desc_back))
                 }
             } else {
                 // Connection pill button (macOS detail topBar style)
@@ -262,7 +264,7 @@ fun DetailTopBar(
                             )
                     )
                     Text(
-                        text = if (viewModel.isConnected) viewModel.host else "Verbinden",
+                        text = if (viewModel.isConnected) viewModel.host else stringResource(Res.string.detail_connect),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -280,7 +282,7 @@ fun DetailTopBar(
             IconButton(onClick = onShowPersona) {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "Mira Persona",
+                    contentDescription = stringResource(Res.string.content_desc_persona),
                     tint = VioletColor
                 )
             }
@@ -289,7 +291,7 @@ fun DetailTopBar(
             IconButton(onClick = onShowHelp) {
                 Icon(
                     imageVector = Icons.Default.HelpOutline,
-                    contentDescription = "Hilfe",
+                    contentDescription = stringResource(Res.string.content_desc_help),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -299,7 +301,7 @@ fun DetailTopBar(
                 IconButton(onClick = { viewModel.newChat() }) {
                     Icon(
                         imageVector = Icons.Default.NoteAdd,
-                        contentDescription = "Neuer Chat",
+                        contentDescription = stringResource(Res.string.common_new_chat),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }

@@ -19,7 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ollamaconnect.models.ServerKind
 import com.ollamaconnect.store.ModelPresetStore
+import com.ollamaconnect.store.localizedPresetName
 import com.ollamaconnect.viewmodel.ChatViewModel
+import ollama_connect.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,10 +37,10 @@ fun ConnectionSettingsView(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Verbindung einrichten", fontWeight = FontWeight.Bold, fontSize = 18.sp) },
+                title = { Text(stringResource(Res.string.connection_title), fontWeight = FontWeight.Bold, fontSize = 18.sp) },
                 actions = {
                     TextButton(onClick = onDismiss) {
-                        Text("Fertig", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                        Text(stringResource(Res.string.common_done), fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -97,14 +100,14 @@ fun ServerCard(viewModel: ChatViewModel) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("SERVER", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(Res.string.server_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             // Typ Segmented Control
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Typ", fontSize = 15.sp, modifier = Modifier.weight(1f))
+                Text(stringResource(Res.string.server_type_label), fontSize = 15.sp, modifier = Modifier.weight(1f))
                 Row(
                     modifier = Modifier
                         .width(220.dp)
@@ -116,7 +119,7 @@ fun ServerCard(viewModel: ChatViewModel) {
                         val selected = viewModel.serverKind == kind
                         val containerColor = if (selected) MaterialTheme.colorScheme.surface else Color.Transparent
                         val textColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                        
+
                         Box(
                             modifier = Modifier
                                 .weight(1f)
@@ -139,7 +142,7 @@ fun ServerCard(viewModel: ChatViewModel) {
                 OutlinedTextField(
                     value = viewModel.host,
                     onValueChange = { viewModel.host = it },
-                    placeholder = { Text("IP-Adresse (z.B. 192.168.1.100)") },
+                    placeholder = { Text(stringResource(Res.string.server_ip_placeholder)) },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Transparent,
@@ -160,7 +163,7 @@ fun ServerCard(viewModel: ChatViewModel) {
                         viewModel.port = it
                         viewModel.savePortForCurrentKind()
                     },
-                    placeholder = { Text("Port") },
+                    placeholder = { Text(stringResource(Res.string.server_port_placeholder)) },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Transparent,
@@ -188,14 +191,14 @@ fun ConnectCard(viewModel: ChatViewModel, onDismiss: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("VERBINDUNG", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(Res.string.connection_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 if (viewModel.isConnected) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(modifier = Modifier.size(7.dp).background(Color(0xFF10B981), RoundedCornerShape(4.dp)))
-                        Text("Verbunden", fontSize = 11.sp, color = Color(0xFF10B981))
+                        Text(stringResource(Res.string.connection_connected_badge), fontSize = 11.sp, color = Color(0xFF10B981))
                     }
                 }
             }
@@ -208,7 +211,7 @@ fun ConnectCard(viewModel: ChatViewModel, onDismiss: () -> Unit) {
                 ) {
                     CircularProgressIndicator(modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.width(10.dp))
-                    Text("Verbinde mit ${viewModel.host}...", fontSize = 14.sp)
+                    Text(stringResource(Res.string.connection_connecting, viewModel.host), fontSize = 14.sp)
                 }
             } else {
                 Button(
@@ -216,7 +219,7 @@ fun ConnectCard(viewModel: ChatViewModel, onDismiss: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text(if (viewModel.isConnected) "Neu verbinden" else "Verbinden")
+                    Text(if (viewModel.isConnected) stringResource(Res.string.connection_reconnect_button) else stringResource(Res.string.connection_connect_button))
                 }
 
                 if (viewModel.isConnected) {
@@ -229,7 +232,7 @@ fun ConnectCard(viewModel: ChatViewModel, onDismiss: () -> Unit) {
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        Text("Verbindung trennen", color = MaterialTheme.colorScheme.onError)
+                        Text(stringResource(Res.string.connection_disconnect_button), color = MaterialTheme.colorScheme.onError)
                     }
                 }
             }
@@ -258,14 +261,14 @@ fun SystemPromptCard(viewModel: ChatViewModel) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text("SYSTEM PROMPT", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(Res.string.system_prompt_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
             OutlinedTextField(
                 value = viewModel.systemPrompt,
                 onValueChange = {
                     viewModel.systemPrompt = it
                     viewModel.saveSystemPromptDefault()
                 },
-                placeholder = { Text("z.B. „Antworte auf Deutsch“") },
+                placeholder = { Text(stringResource(Res.string.system_prompt_placeholder)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 80.dp, max = 140.dp),
@@ -279,7 +282,8 @@ fun SystemPromptCard(viewModel: ChatViewModel) {
 fun PresetsCard(viewModel: ChatViewModel, onManagePresets: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     val store = viewModel.presetStore
-    val activeName = store.preset(viewModel.activePresetID)?.name ?: "Eigene Werte"
+    val activePreset = store.preset(viewModel.activePresetID)
+    val activeName = if (activePreset != null) localizedPresetName(activePreset) else stringResource(Res.string.presets_custom_values)
 
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -289,7 +293,7 @@ fun PresetsCard(viewModel: ChatViewModel, onManagePresets: () -> Unit) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("PRESETS", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(Res.string.presets_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             Box(
                 modifier = Modifier
@@ -304,7 +308,7 @@ fun PresetsCard(viewModel: ChatViewModel, onManagePresets: () -> Unit) {
                 ) {
                     Column {
                         Text(activeName, fontSize = 15.sp, fontWeight = FontWeight.Medium)
-                        Text("Tippen, um ein Preset anzuwenden", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(stringResource(Res.string.presets_tap_hint), fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Icon(Icons.Default.ArrowDropDown, contentDescription = null)
                 }
@@ -315,10 +319,10 @@ fun PresetsCard(viewModel: ChatViewModel, onManagePresets: () -> Unit) {
                 ) {
                     val custom = store.customPresets
                     if (custom.isNotEmpty()) {
-                        Text("EIGENE", fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
+                        Text(stringResource(Res.string.presets_group_custom), fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
                         custom.forEach { preset ->
                             DropdownMenuItem(
-                                text = { Text(preset.name) },
+                                text = { Text(localizedPresetName(preset)) },
                                 onClick = {
                                     viewModel.applyPreset(preset)
                                     expanded = false
@@ -329,10 +333,10 @@ fun PresetsCard(viewModel: ChatViewModel, onManagePresets: () -> Unit) {
                     }
 
                     // Built-ins
-                    Text("GEMMA 4", fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
+                    Text(stringResource(Res.string.presets_group_gemma4), fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
                     ModelPresetStore.builtInPresets.filter { it.id.startsWith("builtin.gemma4") }.forEach { preset ->
                         DropdownMenuItem(
-                            text = { Text(preset.name) },
+                            text = { Text(localizedPresetName(preset)) },
                             onClick = {
                                 viewModel.applyPreset(preset)
                                 expanded = false
@@ -341,10 +345,10 @@ fun PresetsCard(viewModel: ChatViewModel, onManagePresets: () -> Unit) {
                     }
                     HorizontalDivider()
 
-                    Text("QWEN 3.6", fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
+                    Text(stringResource(Res.string.presets_group_qwen36), fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
                     ModelPresetStore.builtInPresets.filter { it.id.startsWith("builtin.qwen36") }.forEach { preset ->
                         DropdownMenuItem(
-                            text = { Text(preset.name) },
+                            text = { Text(localizedPresetName(preset)) },
                             onClick = {
                                 viewModel.applyPreset(preset)
                                 expanded = false
@@ -353,10 +357,10 @@ fun PresetsCard(viewModel: ChatViewModel, onManagePresets: () -> Unit) {
                     }
                     HorizontalDivider()
 
-                    Text("UNIVERSAL", fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
+                    Text(stringResource(Res.string.presets_group_universal), fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
                     ModelPresetStore.builtInPresets.filter { it.id.startsWith("builtin.universal") }.forEach { preset ->
                         DropdownMenuItem(
-                            text = { Text(preset.name) },
+                            text = { Text(localizedPresetName(preset)) },
                             onClick = {
                                 viewModel.applyPreset(preset)
                                 expanded = false
@@ -376,7 +380,7 @@ fun PresetsCard(viewModel: ChatViewModel, onManagePresets: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Eigene Presets verwalten…", fontSize = 15.sp)
+                Text(stringResource(Res.string.presets_manage_link), fontSize = 15.sp)
                 Icon(Icons.Default.ArrowRight, contentDescription = null)
             }
         }
@@ -393,7 +397,7 @@ fun ModelParametersCard(viewModel: ChatViewModel) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Text("MODELL-PARAMETER", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(Res.string.params_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             ParameterSlider(
                 label = "Temperature",
@@ -529,6 +533,9 @@ fun ContextCard(viewModel: ChatViewModel) {
     var msgMenuExpanded by remember { mutableStateOf(false) }
     var tokenMenuExpanded by remember { mutableStateOf(false) }
 
+    val allLabel = stringResource(Res.string.context_all)
+    val defaultLabel = stringResource(Res.string.context_token_default)
+
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -537,7 +544,7 @@ fun ContextCard(viewModel: ChatViewModel) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("KONTEXT-FENSTER", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(Res.string.context_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             // Message Limit
             Row(
@@ -548,17 +555,17 @@ fun ContextCard(viewModel: ChatViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Nachrichten-Limit", fontSize = 15.sp)
+                Text(stringResource(Res.string.context_message_limit_label), fontSize = 15.sp)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val activeLimit = viewModel.contextMessageLimit
-                    Text(if (activeLimit == 0) "Alle" else "Letzte $activeLimit", fontSize = 15.sp, color = MaterialTheme.colorScheme.primary)
+                    Text(if (activeLimit == 0) allLabel else stringResource(Res.string.context_last_n, activeLimit), fontSize = 15.sp, color = MaterialTheme.colorScheme.primary)
                     Icon(Icons.Default.ArrowDropDown, contentDescription = null)
                 }
 
                 DropdownMenu(expanded = msgMenuExpanded, onDismissRequest = { msgMenuExpanded = false }) {
                     messageLimitOptions.forEach { limit ->
                         DropdownMenuItem(
-                            text = { Text(if (limit == 0) "Alle" else "Letzte $limit") },
+                            text = { Text(if (limit == 0) allLabel else stringResource(Res.string.context_last_n, limit)) },
                             onClick = {
                                 viewModel.contextMessageLimit = limit
                                 viewModel.saveModelParameterDefaults()
@@ -580,17 +587,17 @@ fun ContextCard(viewModel: ChatViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Token-Limit (num_ctx)", fontSize = 15.sp)
+                Text(stringResource(Res.string.context_token_limit_label), fontSize = 15.sp)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val activeTokens = viewModel.contextTokenLimit
-                    val label = if (activeTokens == 0) "Standard" else if (activeTokens >= 1024) "${activeTokens / 1024}K" else "$activeTokens"
+                    val label = if (activeTokens == 0) defaultLabel else if (activeTokens >= 1024) "${activeTokens / 1024}K" else "$activeTokens"
                     Text(label, fontSize = 15.sp, color = MaterialTheme.colorScheme.primary)
                     Icon(Icons.Default.ArrowDropDown, contentDescription = null)
                 }
 
                 DropdownMenu(expanded = tokenMenuExpanded, onDismissRequest = { tokenMenuExpanded = false }) {
                     tokenOptions.forEach { tokens ->
-                        val label = if (tokens == 0) "Standard" else if (tokens >= 1024) "${tokens / 1024}K" else "$tokens"
+                        val label = if (tokens == 0) defaultLabel else if (tokens >= 1024) "${tokens / 1024}K" else "$tokens"
                         DropdownMenuItem(
                             text = { Text(label) },
                             onClick = {
@@ -616,7 +623,7 @@ fun SavedHostsCard(viewModel: ChatViewModel) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("GESPEICHERTE VERBINDUNGEN", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(Res.string.saved_connections_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             viewModel.savedHosts.forEachIndexed { index, host ->
                 Row(
@@ -644,10 +651,10 @@ fun SavedHostsCard(viewModel: ChatViewModel) {
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         if (viewModel.host == host.address && viewModel.serverKind == host.kind) {
-                            Icon(Icons.Default.Check, contentDescription = "Aktiv", tint = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Default.Check, contentDescription = stringResource(Res.string.content_desc_active), tint = MaterialTheme.colorScheme.primary)
                         }
                         IconButton(onClick = { viewModel.removeHost(host) }) {
-                            Icon(Icons.Default.RemoveCircle, contentDescription = "Löschen", tint = Color.Red)
+                            Icon(Icons.Default.RemoveCircle, contentDescription = stringResource(Res.string.common_delete), tint = Color.Red)
                         }
                     }
                 }
@@ -670,7 +677,7 @@ fun ModelsCard(viewModel: ChatViewModel) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("MODELLE (${viewModel.availableModels.size})", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(Res.string.models_header, viewModel.availableModels.size), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             viewModel.availableModels.forEachIndexed { index, model ->
                 val selected = viewModel.selectedModel == model.name
@@ -689,7 +696,7 @@ fun ModelsCard(viewModel: ChatViewModel) {
                         }
                     }
                     if (selected) {
-                        Icon(Icons.Default.CheckCircle, contentDescription = "Ausgewählt", tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.Default.CheckCircle, contentDescription = stringResource(Res.string.content_desc_selected), tint = MaterialTheme.colorScheme.primary)
                     }
                 }
 

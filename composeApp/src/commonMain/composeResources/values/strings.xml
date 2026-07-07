@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_done">Done</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_save">Save</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_new_chat">New chat</string>
+
+    <!-- App.kt / DetailTopBar -->
+    <string name="detail_choose_model">Choose model</string>
+    <string name="detail_connect">Connect</string>
+    <string name="content_desc_back">Back</string>
+    <string name="content_desc_persona">Assistant persona</string>
+    <string name="content_desc_help">Help</string>
+
+    <!-- WelcomeView -->
+    <string name="welcome_subtitle">Chat with AI models on your Mac Mini</string>
+    <string name="welcome_connect_button">Connect to server</string>
+    <string name="welcome_footer">Make sure Ollama is running on your Mac Mini\nand your iPad/Android device is on the same network.</string>
+
+    <!-- HelpView -->
+    <string name="help_title">Help</string>
+    <string name="help_header_tagline">Chat with AI models on your own server – fast, private, and cloud-free. Version 2.0 (KMP) © 2026 Peter Betz</string>
+
+    <string name="help_section_connection_title">Connection</string>
+    <string name="help_connection_server_type_title">Choose server type</string>
+    <string name="help_connection_server_type_desc">Choose between Ollama and llama-server. Both backends are supported — Ollama uses its native API, llama-server the OpenAI-compatible API (/v1/chat/completions).</string>
+    <string name="help_connection_ip_title">Enter IP address &amp; port</string>
+    <string name="help_connection_ip_desc">Tap the connection status in the top left and enter your server\'s IP address (e.g. 192.168.1.100). Default port: Ollama 11434, llama-server 8080.</string>
+    <string name="help_connection_reconnect_title">Reconnect</string>
+    <string name="help_connection_reconnect_desc">After a disconnect, use \"Reconnect\" to restore the connection without re-entering your settings.</string>
+    <string name="help_connection_saved_title">Saved servers</string>
+    <string name="help_connection_saved_desc">Recently used server addresses are saved automatically along with their type and can be selected with a tap.</string>
+
+    <string name="help_section_chat_title">Chatting</string>
+    <string name="help_chat_send_title">Send a message</string>
+    <string name="help_chat_send_desc">Type your message in the input field and tap the arrow button, or press ⌘+Enter on an external keyboard.</string>
+    <string name="help_chat_stop_title">Stop generation</string>
+    <string name="help_chat_stop_desc">While a response is being generated, a red stop button appears. Use it to cancel generation at any time – the text produced so far is kept.</string>
+    <string name="help_chat_copy_title">Copy code</string>
+    <string name="help_chat_copy_desc">Code blocks in responses show a \"Copy\" button in the top right. Tap it to copy the code to the clipboard.</string>
+    <string name="help_chat_model_title">Switch model</string>
+    <string name="help_chat_model_desc">In the top right, choose the active model from the list of all models available on the server.</string>
+
+    <string name="help_section_history_title">Chat history</string>
+    <string name="help_history_new_title">New chat</string>
+    <string name="help_history_new_desc">Start a new chat using the pencil button in the sidebar or in the top right of the chat.</string>
+    <string name="help_history_search_title">Search chats</string>
+    <string name="help_history_search_desc">Use the search field in the sidebar to filter chats by title, model, or message content.</string>
+    <string name="help_history_rename_title">Rename chat</string>
+    <string name="help_history_rename_desc">Long-press a chat in the sidebar and choose \"Rename\" to give the chat a custom title.</string>
+    <string name="help_history_export_title">Export chat</string>
+    <string name="help_history_export_desc">Export a chat as formatted Markdown text via the context menu (long-press).</string>
+    <string name="help_history_delete_title">Delete chat</string>
+    <string name="help_history_delete_desc">Delete a chat via the context menu (long-press).</string>
+
+    <string name="help_section_assistant_title">Assistant (Persona · Memory)</string>
+    <string name="help_assistant_config_title">Configuration</string>
+    <string name="help_assistant_config_desc">In the configuration, you define the assistant\'s name, who you are, and the ground rules for every chat — e.g. language, style, no-gos. Prepended to every chat as a system prompt.</string>
+    <string name="help_assistant_soul_title">Personality (Soul)</string>
+    <string name="help_assistant_soul_desc">Here you set the vibe: tone, energy, speaking style. These traits define how the assistant sounds — not what it says.</string>
+    <string name="help_assistant_memory_title">Memory</string>
+    <string name="help_assistant_memory_desc">Persistent facts that stay in mind across all chats. If you ask the assistant in a chat to remember something, it adds the entry itself (via a hidden &lt;remember&gt; tag that\'s removed from the response before you see it).</string>
+    <string name="help_assistant_files_title">Files &amp; editability</string>
+    <string name="help_assistant_files_desc">Configuration, personality, and memory live as Markdown files in the Assistant folder. You can also edit them with external editors. \"Reload from file\" refreshes the display.</string>
+    <string name="help_assistant_toggle_title">Enable/disable</string>
+    <string name="help_assistant_toggle_desc">Each of the three building blocks can be enabled or disabled individually — handy for chatting without a personality, or temporarily pausing memory.</string>
+
+    <string name="help_section_params_title">Model parameters</string>
+    <string name="help_param_temperature_title">Temperature (0–2)</string>
+    <string name="help_param_temperature_desc">Controls the creativity of responses. Low values (e.g. 0.2) give precise, predictable answers. High values (e.g. 1.2) make the model more creative.</string>
+    <string name="help_param_topk_title">Top-K (1–200)</string>
+    <string name="help_param_topk_desc">Limits token selection to the K most likely next tokens.</string>
+    <string name="help_param_topp_title">Top-P (0–1)</string>
+    <string name="help_param_topp_desc">Picks tokens from the smallest set whose cumulative probability exceeds P. Works similarly to Top-K, but adaptively.</string>
+    <string name="help_param_minp_title">Min-P (0–1)</string>
+    <string name="help_param_minp_desc">Cuts off tokens below a minimum probability. 0 = disabled. Helps against unlikely, hallucination-prone tokens.</string>
+    <string name="help_param_presence_title">Presence Penalty (0–2)</string>
+    <string name="help_param_presence_desc">Penalizes tokens that already appeared — reduces infinite loops. Unsloth often recommends 1.5 for Qwen3.6.</string>
+
+    <string name="help_section_shortcuts_title">Keyboard shortcuts</string>
+    <string name="help_shortcut_send_title">⌘ + Enter – Send message</string>
+    <string name="help_shortcut_send_desc">On an external keyboard, ⌘+Enter (Command + Return) sends the message directly.</string>
+
+    <string name="help_tip_title">Get the best results</string>
+    <string name="help_tip_desc">Combine a precise system prompt with a low temperature (0.1–0.4) for factual tasks like coding or translation. For creative writing, raise temperature to 0.8–1.2 and disable the system prompt.</string>
+
+    <!-- PresetManagementView -->
+    <string name="preset_manage_title">Manage presets</string>
+    <string name="preset_create_from_current">Create new preset from current values</string>
+    <string name="preset_custom_header">CUSTOM PRESETS</string>
+    <string name="preset_custom_empty">No custom presets yet. Tap the button above to save the currently set values as a preset.</string>
+    <string name="preset_builtin_header">BUILT-IN PRESETS</string>
+    <string name="preset_builtin_footer">Values from the official Unsloth recommendations for Gemma 4 and Qwen3.6. Built-in presets can\'t be deleted — but you can use them as a template for your own presets.</string>
+    <string name="preset_builtin_badge">Built-in</string>
+    <string name="preset_new_default_name">My Preset</string>
+    <string name="preset_new_title">New preset</string>
+    <string name="preset_edit_title">Edit preset</string>
+    <string name="preset_field_name_label">Name</string>
+    <string name="preset_field_name_placeholder">e.g. "Llama 3 – Coding"</string>
+    <string name="preset_field_summary_label">Description (optional)</string>
+    <string name="preset_custom_token_limit">Set custom token limit</string>
+    <string name="preset_num_ctx_label">num_ctx</string>
+    <string name="preset_num_ctx_tokens">%1$s tokens</string>
+    <string name="content_desc_decrement">Decrement</string>
+    <string name="content_desc_increment">Increment</string>
+
+    <!-- ConnectionSettingsView -->
+    <string name="connection_title">Set up connection</string>
+    <string name="server_header">SERVER</string>
+    <string name="server_type_label">Type</string>
+    <string name="server_ip_placeholder">IP address (e.g. 192.168.1.100)</string>
+    <string name="server_port_placeholder">Port</string>
+    <string name="connection_header">CONNECTION</string>
+    <string name="connection_connected_badge">Connected</string>
+    <string name="connection_connecting">Connecting to %1$s…</string>
+    <string name="connection_reconnect_button">Reconnect</string>
+    <string name="connection_connect_button">Connect</string>
+    <string name="connection_disconnect_button">Disconnect</string>
+    <string name="system_prompt_header">SYSTEM PROMPT</string>
+    <string name="system_prompt_placeholder">e.g. "Keep responses concise"</string>
+    <string name="presets_header">PRESETS</string>
+    <string name="presets_custom_values">Custom values</string>
+    <string name="presets_tap_hint">Tap to apply a preset</string>
+    <string name="presets_group_custom">CUSTOM</string>
+    <string name="presets_group_gemma4">GEMMA 4</string>
+    <string name="presets_group_qwen36">QWEN 3.6</string>
+    <string name="presets_group_universal">UNIVERSAL</string>
+    <string name="presets_manage_link">Manage custom presets…</string>
+    <string name="params_header">MODEL PARAMETERS</string>
+    <string name="context_header">CONTEXT WINDOW</string>
+    <string name="context_message_limit_label">Message limit</string>
+    <string name="context_all">All</string>
+    <string name="context_last_n">Last %1$s</string>
+    <string name="context_token_limit_label">Token limit (num_ctx)</string>
+    <string name="context_token_default">Default</string>
+    <string name="saved_connections_header">SAVED CONNECTIONS</string>
+    <string name="content_desc_active">Active</string>
+    <string name="models_header">MODELS (%1$s)</string>
+    <string name="content_desc_selected">Selected</string>
+
+    <!-- ChatView -->
+    <string name="chat_input_placeholder">Type a message…</string>
+    <string name="content_desc_stop_generation">Stop generation</string>
+    <string name="content_desc_send">Send</string>
+
+    <!-- PersonaSettingsView -->
+    <string name="persona_title">Assistant</string>
+    <string name="persona_tab_config">Configuration</string>
+    <string name="persona_tab_soul">Personality</string>
+    <string name="persona_tab_memory">Memory</string>
+    <string name="persona_intro_config">Define who the assistant is (name, role), who you are, and the ground rules for every chat — such as language, style, and no-gos.</string>
+    <string name="persona_intro_soul">Here you shape the vibe: tone, energy, speaking style. These traits define how the assistant sounds — not what it says.</string>
+    <string name="persona_intro_memory">Persistent facts the assistant keeps in mind across all chats. If you ask it in a chat to remember something, it\'s added here automatically. You can also edit entries directly.</string>
+    <string name="persona_toggle_config_active">Configuration active</string>
+    <string name="persona_toggle_soul_active">Personality active</string>
+    <string name="persona_toggle_memory_active">Memory active</string>
+    <string name="persona_toggle_auto_memory">Remember automatically</string>
+    <string name="persona_toggle_auto_memory_desc">Lets the LLM save new facts itself via a &lt;remember&gt; tag.</string>
+    <string name="persona_editor_header">CONTENT (MARKDOWN)</string>
+    <string name="persona_editor_char_count">%1$s characters</string>
+    <string name="persona_action_save">Save to file</string>
+    <string name="persona_action_reload">Reload from file</string>
+    <string name="persona_action_reset">Reset to template</string>
+    <string name="persona_file_path_header">FILE PATH</string>
+    <string name="persona_file_path_desc">The file lives in the Assistant folder of your application data directory and can also be edited there with external editors. Afterwards, tap \"Reload from file\".</string>
+    <string name="persona_reset_dialog_title">Reset to default?</string>
+    <string name="persona_reset_dialog_message">The content of "%1$s" will be replaced by the built-in template.</string>
+    <string name="persona_reset_confirm">Reset</string>
+
+    <!-- ConversationListView -->
+    <string name="chats_title">Chats</string>
+    <string name="chats_search_placeholder">Search chats</string>
+    <string name="content_desc_server_connection">Server connection</string>
+    <string name="content_desc_search">Search</string>
+    <string name="content_desc_clear_search">Clear</string>
+    <string name="no_results_for">No results for "%1$s"</string>
+    <string name="context_menu_rename">Rename</string>
+    <string name="context_menu_share">Share</string>
+    <string name="rename_dialog_title">Rename chat</string>
+    <string name="rename_dialog_placeholder">New title</string>
+    <string name="empty_state_connected_title">No chats</string>
+    <string name="empty_state_connected_desc">Start a new conversation using the pencil icon in the top right.</string>
+    <string name="empty_state_disconnected_title">Not connected</string>
+    <string name="empty_state_disconnected_desc">Connect to your Ollama or llama-server to get started.</string>
+    <string name="empty_state_connect_button">Connect to server</string>
+
+    <!-- ChatBubbleView / MarkdownBlockView -->
+    <string name="content_desc_user_avatar">User avatar</string>
+    <string name="content_desc_copy_code">Copy code</string>
+
+    <!-- ChatViewModel -->
+    <string name="error_invalid_host_port">Please enter a valid IP address and port.</string>
+    <string name="error_unknown_connection">Unknown connection error.</string>
+    <string name="error_generation_failed">Generation error.</string>
+    <string name="context_info_limited">Context: last %1$s of %2$s messages</string>
+    <string name="new_chat_default_title">New chat</string>
+    <string name="export_model_label">Model</string>
+    <string name="export_user_label">You</string>
+    <string name="export_assistant_label">Assistant</string>
+    <string name="export_footer">Exported from Ollama Connect (Kotlin)</string>
+
+    <!-- OllamaService / LlamaServerService -->
+    <string name="error_server_http">Server error (HTTP %1$s)</string>
+    <string name="error_connection_prefix">Connection error: %1$s</string>
+
+    <!-- ModelPresetStore built-in presets -->
+    <string name="preset_gemma4_default_name">Gemma 4 – Default</string>
+    <string name="preset_gemma4_default_summary">Official recommendation (Unsloth/Google): balanced.</string>
+    <string name="preset_gemma4_ollama_name">Gemma 4 – Ollama</string>
+    <string name="preset_gemma4_ollama_summary">Recommended by Unsloth specifically for Ollama (low temperature).</string>
+    <string name="preset_qwen36_thinking_general_name">Qwen3.6 – Thinking, general</string>
+    <string name="preset_qwen36_thinking_general_summary">Thinking mode for open-ended tasks.</string>
+    <string name="preset_qwen36_thinking_coding_name">Qwen3.6 – Thinking, Coding</string>
+    <string name="preset_qwen36_thinking_coding_summary">Thinking mode, precise for code &amp; web dev.</string>
+    <string name="preset_qwen36_instruct_general_name">Qwen3.6 – Instruct, general</string>
+    <string name="preset_qwen36_instruct_general_summary">Non-thinking mode, classic responses.</string>
+    <string name="preset_qwen36_instruct_reasoning_name">Qwen3.6 – Instruct, Reasoning</string>
+    <string name="preset_qwen36_instruct_reasoning_summary">Non-thinking mode, optimized for logic.</string>
+    <string name="preset_universal_precise_name">Universal – Precise</string>
+    <string name="preset_universal_precise_summary">Low temperature for facts &amp; code.</string>
+    <string name="preset_universal_balanced_name">Universal – Balanced</string>
+    <string name="preset_universal_balanced_summary">App default. Safe all-rounder.</string>
+    <string name="preset_universal_creative_name">Universal – Creative</string>
+    <string name="preset_universal_creative_summary">High temperature for writing &amp; brainstorming.</string>
+</resources>

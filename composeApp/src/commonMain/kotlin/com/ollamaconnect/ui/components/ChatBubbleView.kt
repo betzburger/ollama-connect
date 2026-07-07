@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.sp
 import com.ollamaconnect.models.ChatMessage
 import com.ollamaconnect.models.MessageRole
 import com.ollamaconnect.ui.theme.*
+import ollama_connect.composeapp.generated.resources.Res
+import ollama_connect.composeapp.generated.resources.content_desc_user_avatar
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ChatBubbleView(
@@ -148,7 +151,7 @@ fun UserAvatar(modifier: Modifier = Modifier) {
     ) {
         Icon(
             imageVector = Icons.Default.Person,
-            contentDescription = "User Avatar",
+            contentDescription = stringResource(Res.string.content_desc_user_avatar),
             tint = Color.White,
             modifier = Modifier.size(16.dp)
         )

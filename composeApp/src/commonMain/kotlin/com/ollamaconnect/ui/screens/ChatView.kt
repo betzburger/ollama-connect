@@ -22,6 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ollamaconnect.ui.components.ChatBubbleView
 import com.ollamaconnect.viewmodel.ChatViewModel
+import ollama_connect.composeapp.generated.resources.Res
+import ollama_connect.composeapp.generated.resources.chat_input_placeholder
+import ollama_connect.composeapp.generated.resources.content_desc_send
+import ollama_connect.composeapp.generated.resources.content_desc_stop_generation
+import ollama_connect.composeapp.generated.resources.context_info_limited
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -87,12 +93,18 @@ fun ChatView(
             }
         }
 
+        val contextInfo = if (viewModel.contextMessageLimit > 0 && viewModel.messages.size > viewModel.contextMessageLimit) {
+            stringResource(Res.string.context_info_limited, viewModel.contextMessageLimit, viewModel.messages.size)
+        } else {
+            null
+        }
+
         AnimatedVisibility(
-            visible = viewModel.contextInfo != null,
+            visible = contextInfo != null,
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            val info = viewModel.contextInfo
+            val info = contextInfo
             if (info != null) {
                 ContextInfoBanner(message = info)
             }
@@ -183,7 +195,7 @@ fun MessageInputBar(
         OutlinedTextField(
             value = viewModel.inputText,
             onValueChange = { viewModel.inputText = it },
-            placeholder = { Text("Nachricht eingeben…", fontSize = 14.sp) },
+            placeholder = { Text(stringResource(Res.string.chat_input_placeholder), fontSize = 14.sp) },
             modifier = Modifier
                 .weight(1f)
                 .onKeyEvent { keyEvent ->
@@ -230,7 +242,7 @@ fun MessageInputBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Stop,
-                            contentDescription = "Generierung stoppen",
+                            contentDescription = stringResource(Res.string.content_desc_stop_generation),
                             tint = Color.White,
                             modifier = Modifier.size(16.dp)
                         )
@@ -251,7 +263,7 @@ fun MessageInputBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowUpward,
-                            contentDescription = "Senden",
+                            contentDescription = stringResource(Res.string.content_desc_send),
                             tint = Color.White,
                             modifier = Modifier.size(16.dp)
                         )

@@ -12,6 +12,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ollama_connect.composeapp.generated.resources.Res
+import ollama_connect.composeapp.generated.resources.welcome_connect_button
+import ollama_connect.composeapp.generated.resources.welcome_footer
+import ollama_connect.composeapp.generated.resources.welcome_subtitle
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun WelcomeView(
@@ -47,7 +52,7 @@ fun WelcomeView(
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "Chatte mit KI-Modellen auf deinem Mac Mini",
+                    text = stringResource(Res.string.welcome_subtitle),
                     fontSize = 15.sp,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                     textAlign = TextAlign.Center
@@ -78,7 +83,7 @@ fun WelcomeView(
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                     Text(
-                        text = "Mit Server verbinden",
+                        text = stringResource(Res.string.welcome_connect_button),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimary
@@ -87,7 +92,7 @@ fun WelcomeView(
             }
 
             Text(
-                text = "Stelle sicher, dass Ollama auf deinem Mac Mini läuft\nund das iPad/Android-Gerät im selben Netzwerk ist.",
+                text = stringResource(Res.string.welcome_footer),
                 fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center,

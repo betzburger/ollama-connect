@@ -1,10 +1,14 @@
 package com.ollamaconnect.store
 
+import androidx.compose.runtime.Composable
 import com.ollamaconnect.LocalStorage
 import com.ollamaconnect.models.ModelPreset
 import com.ollamaconnect.generateUUID
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
+import ollama_connect.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 class ModelPresetStore(private val storage: LocalStorage) {
 
@@ -182,5 +186,41 @@ class ModelPresetStore(private val storage: LocalStorage) {
                 isBuiltIn = true
             )
         )
+
+        val nameKeys: Map<String, StringResource> = mapOf(
+            "builtin.gemma4.default" to Res.string.preset_gemma4_default_name,
+            "builtin.gemma4.ollama" to Res.string.preset_gemma4_ollama_name,
+            "builtin.qwen36.thinking.general" to Res.string.preset_qwen36_thinking_general_name,
+            "builtin.qwen36.thinking.coding" to Res.string.preset_qwen36_thinking_coding_name,
+            "builtin.qwen36.instruct.general" to Res.string.preset_qwen36_instruct_general_name,
+            "builtin.qwen36.instruct.reasoning" to Res.string.preset_qwen36_instruct_reasoning_name,
+            "builtin.universal.precise" to Res.string.preset_universal_precise_name,
+            "builtin.universal.balanced" to Res.string.preset_universal_balanced_name,
+            "builtin.universal.creative" to Res.string.preset_universal_creative_name
+        )
+
+        val summaryKeys: Map<String, StringResource> = mapOf(
+            "builtin.gemma4.default" to Res.string.preset_gemma4_default_summary,
+            "builtin.gemma4.ollama" to Res.string.preset_gemma4_ollama_summary,
+            "builtin.qwen36.thinking.general" to Res.string.preset_qwen36_thinking_general_summary,
+            "builtin.qwen36.thinking.coding" to Res.string.preset_qwen36_thinking_coding_summary,
+            "builtin.qwen36.instruct.general" to Res.string.preset_qwen36_instruct_general_summary,
+            "builtin.qwen36.instruct.reasoning" to Res.string.preset_qwen36_instruct_reasoning_summary,
+            "builtin.universal.precise" to Res.string.preset_universal_precise_summary,
+            "builtin.universal.balanced" to Res.string.preset_universal_balanced_summary,
+            "builtin.universal.creative" to Res.string.preset_universal_creative_summary
+        )
     }
+}
+
+@Composable
+fun localizedPresetName(preset: ModelPreset): String {
+    val key = ModelPresetStore.nameKeys[preset.id]
+    return if (preset.isBuiltIn && key != null) stringResource(key) else preset.name
+}
+
+@Composable
+fun localizedPresetSummary(preset: ModelPreset): String {
+    val key = ModelPresetStore.summaryKeys[preset.id]
+    return if (preset.isBuiltIn && key != null) stringResource(key) else preset.summary
 }

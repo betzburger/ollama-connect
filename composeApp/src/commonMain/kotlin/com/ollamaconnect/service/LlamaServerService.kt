@@ -11,6 +11,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.coroutines.cancellation.CancellationException
+import ollama_connect.composeapp.generated.resources.Res
+import ollama_connect.composeapp.generated.resources.error_connection_prefix
+import ollama_connect.composeapp.generated.resources.error_server_http
+import org.jetbrains.compose.resources.getString
 
 class LlamaServerService(
     private val host: String,
@@ -25,7 +29,7 @@ class LlamaServerService(
         val url = "$baseURL/v1/models"
         val response = client.get(url)
         if (response.status != HttpStatusCode.OK) {
-            throw Exception("Serverfehler (HTTP ${response.status.value})")
+            throw Exception(getString(Res.string.error_server_http, response.status.value))
         }
         val text = response.bodyAsText()
         val modelsResponse = Json { ignoreUnknownKeys = true }.decodeFromString<OpenAIModelsResponse>(text)
@@ -63,7 +67,7 @@ class LlamaServerService(
                 setBody(bodyString)
             }.execute { response ->
                 if (response.status != HttpStatusCode.OK) {
-                    throw Exception("Serverfehler (HTTP ${response.status.value})")
+                    throw Exception(getString(Res.string.error_server_http, response.status.value))
                 }
                 val channel = response.bodyAsChannel()
                 while (!channel.isClosedForRead) {
@@ -93,7 +97,7 @@ class LlamaServerService(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw Exception("Verbindungsfehler: ${e.message}")
+            throw Exception(getString(Res.string.error_connection_prefix, e.message ?: ""))
         }
     }
 }

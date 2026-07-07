@@ -21,7 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ollamaconnect.models.ModelPreset
 import com.ollamaconnect.store.ModelPresetStore
+import com.ollamaconnect.store.localizedPresetName
+import com.ollamaconnect.store.localizedPresetSummary
 import com.ollamaconnect.viewmodel.ChatViewModel
+import ollama_connect.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,10 +41,10 @@ fun PresetManagementView(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Presets verwalten", fontWeight = FontWeight.Bold, fontSize = 18.sp) },
+                title = { Text(stringResource(Res.string.preset_manage_title), fontWeight = FontWeight.Bold, fontSize = 18.sp) },
                 actions = {
                     TextButton(onClick = onDismiss) {
-                        Text("Fertig", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                        Text(stringResource(Res.string.common_done), fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -74,20 +78,20 @@ fun PresetManagementView(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(Icons.Default.AddCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                            Text("Aus aktuellen Werten neues Preset erstellen", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.primary)
+                            Text(stringResource(Res.string.preset_create_from_current), fontSize = 15.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
 
                 // Custom Presets
                 item {
-                    Text("EIGENE PRESETS", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(Res.string.preset_custom_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
 
                 if (store.customPresets.isEmpty()) {
                     item {
                         Text(
-                            "Noch keine eigenen Presets. Tippe oben auf den Button, um die aktuell eingestellten Werte als Preset zu speichern.",
+                            stringResource(Res.string.preset_custom_empty),
                             fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(horizontal = 4.dp)
@@ -110,7 +114,7 @@ fun PresetManagementView(
 
                 // Built-in Presets
                 item {
-                    Text("MITGELIEFERTE PRESETS", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(Res.string.preset_builtin_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
 
                 items(ModelPresetStore.builtInPresets, key = { it.id }) { preset ->
@@ -123,7 +127,7 @@ fun PresetManagementView(
 
                 item {
                     Text(
-                        "Werte aus den offiziellen Unsloth-Empfehlungen für Gemma 4 und Qwen3.6. Built-in-Presets können nicht gelöscht werden — du kannst sie aber als Vorlage für eigene Presets nutzen.",
+                        stringResource(Res.string.preset_builtin_footer),
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                         modifier = Modifier.padding(horizontal = 4.dp)
@@ -133,9 +137,10 @@ fun PresetManagementView(
 
             // Create New Dialog
             if (creatingNew) {
+                val defaultName = stringResource(Res.string.preset_new_default_name)
                 PresetEditorDialog(
                     initial = ModelPreset(
-                        name = "Mein Preset",
+                        name = defaultName,
                         summary = "",
                         temperature = viewModel.temperature,
                         topK = viewModel.topK.toInt(),
@@ -144,7 +149,7 @@ fun PresetManagementView(
                         presencePenalty = viewModel.presencePenalty,
                         numCtx = if (viewModel.contextTokenLimit > 0) viewModel.contextTokenLimit else null
                     ),
-                    title = "Neues Preset",
+                    title = stringResource(Res.string.preset_new_title),
                     onDismiss = { creatingNew = false },
                     onConfirm = { preset ->
                         store.addCustomPreset(preset)
@@ -157,7 +162,7 @@ fun PresetManagementView(
             editingPreset?.let { preset ->
                 PresetEditorDialog(
                     initial = preset,
-                    title = "Preset bearbeiten",
+                    title = stringResource(Res.string.preset_edit_title),
                     onDismiss = { editingPreset = null },
                     onConfirm = { updated ->
                         store.updateCustomPreset(updated)
@@ -197,20 +202,21 @@ fun PresetRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(preset.name, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    Text(localizedPresetName(preset), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                     if (preset.isBuiltIn) {
                         Box(
                             modifier = Modifier
                                 .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), RoundedCornerShape(10.dp))
                                 .padding(horizontal = 6.dp, vertical = 2.dp)
                         ) {
-                            Text("Built-in", fontSize = 9.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(stringResource(Res.string.preset_builtin_badge), fontSize = 9.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
 
-                if (preset.summary.isNotEmpty()) {
-                    Text(preset.summary, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                val summary = localizedPresetSummary(preset)
+                if (summary.isNotEmpty()) {
+                    Text(summary, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
 
                 Text(preset.shortLabel, fontSize = 11.sp, fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
@@ -218,7 +224,7 @@ fun PresetRow(
 
             if (onDelete != null) {
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Default.Delete, contentDescription = "Löschen", tint = Color.Red)
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(Res.string.common_delete), tint = Color.Red)
                 }
             }
         }
@@ -239,7 +245,7 @@ fun PresetEditorDialog(
     var topP by remember { mutableStateOf(initial.topP) }
     var minP by remember { mutableStateOf(initial.minP) }
     var presencePenalty by remember { mutableStateOf(initial.presencePenalty) }
-    
+
     var hasCustomLimit by remember { mutableStateOf(initial.numCtx != null) }
     var numCtx by remember { mutableStateOf(initial.numCtx ?: 8192) }
 
@@ -260,8 +266,8 @@ fun PresetEditorDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
-                    placeholder = { Text("z.B. „Llama 3 – Coding“") },
+                    label = { Text(stringResource(Res.string.preset_field_name_label)) },
+                    placeholder = { Text(stringResource(Res.string.preset_field_name_placeholder)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -269,7 +275,7 @@ fun PresetEditorDialog(
                 OutlinedTextField(
                     value = summary,
                     onValueChange = { summary = it },
-                    label = { Text("Beschreibung (optional)") },
+                    label = { Text(stringResource(Res.string.preset_field_summary_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     maxLines = 2
                 )
@@ -326,7 +332,7 @@ fun PresetEditorDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Eigenes Token-Limit setzen", fontSize = 14.sp)
+                    Text(stringResource(Res.string.preset_custom_token_limit), fontSize = 14.sp)
                     Switch(checked = hasCustomLimit, onCheckedChange = { hasCustomLimit = it })
                 }
 
@@ -336,17 +342,17 @@ fun PresetEditorDialog(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("num_ctx", fontSize = 14.sp)
+                        Text(stringResource(Res.string.preset_num_ctx_label), fontSize = 14.sp)
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             IconButton(onClick = { if (numCtx > 1024) numCtx -= 1024 }) {
-                                Icon(Icons.Default.Remove, contentDescription = "Dekrement")
+                                Icon(Icons.Default.Remove, contentDescription = stringResource(Res.string.content_desc_decrement))
                             }
-                            Text("$numCtx Tokens", fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+                            Text(stringResource(Res.string.preset_num_ctx_tokens, numCtx), fontSize = 14.sp, fontFamily = FontFamily.Monospace)
                             IconButton(onClick = { if (numCtx < 262144) numCtx += 1024 }) {
-                                Icon(Icons.Default.Add, contentDescription = "Inkrement")
+                                Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.content_desc_increment))
                             }
                         }
                     }
@@ -372,12 +378,12 @@ fun PresetEditorDialog(
                 },
                 enabled = name.trim().isNotEmpty()
             ) {
-                Text("Sichern")
+                Text(stringResource(Res.string.common_save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Abbrechen")
+                Text(stringResource(Res.string.common_cancel))
             }
         }
     )

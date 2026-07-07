@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import com.ollamaconnect.models.Conversation
 import com.ollamaconnect.shareText
 import com.ollamaconnect.viewmodel.ChatViewModel
+import ollama_connect.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -34,6 +36,11 @@ fun ConversationListView(
     var searchText by remember { mutableStateOf("") }
     var renamingConversation by remember { mutableStateOf<Conversation?>(null) }
     var renameText by remember { mutableStateOf("") }
+
+    val exportModelLabel = stringResource(Res.string.export_model_label)
+    val exportUserLabel = stringResource(Res.string.export_user_label)
+    val exportAssistantLabel = stringResource(Res.string.export_assistant_label)
+    val exportFooter = stringResource(Res.string.export_footer)
 
     val filteredConversations = remember(searchText, viewModel.conversations.size, viewModel.conversations.map { it.updatedAt }) {
         val query = searchText.lowercase().trim()
@@ -52,12 +59,12 @@ fun ConversationListView(
         Column(modifier = Modifier.fillMaxSize()) {
             // Top App Bar
             TopAppBar(
-                title = { Text("Chats", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
+                title = { Text(stringResource(Res.string.chats_title), fontWeight = FontWeight.Bold, fontSize = 20.sp) },
                 navigationIcon = {
                     IconButton(onClick = onShowSettings) {
                         Icon(
                             imageVector = Icons.Default.Wifi,
-                            contentDescription = "Server Verbindung",
+                            contentDescription = stringResource(Res.string.content_desc_server_connection),
                             tint = if (viewModel.isConnected) Color(0xFF10B981) else Color(0xFFF59E0B)
                         )
                     }
@@ -69,7 +76,7 @@ fun ConversationListView(
                     }) {
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Neuer Chat",
+                            contentDescription = stringResource(Res.string.common_new_chat),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -81,12 +88,12 @@ fun ConversationListView(
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
-                placeholder = { Text("Chats durchsuchen", fontSize = 14.sp) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Suchen", modifier = Modifier.size(18.dp)) },
+                placeholder = { Text(stringResource(Res.string.chats_search_placeholder), fontSize = 14.sp) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = stringResource(Res.string.content_desc_search), modifier = Modifier.size(18.dp)) },
                 trailingIcon = {
                     if (searchText.isNotEmpty()) {
                         IconButton(onClick = { searchText = "" }) {
-                            Icon(Icons.Default.Clear, contentDescription = "Löschen", modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.Clear, contentDescription = stringResource(Res.string.content_desc_clear_search), modifier = Modifier.size(16.dp))
                         }
                     }
                 },
@@ -112,7 +119,7 @@ fun ConversationListView(
             } else if (searchText.isNotEmpty() && filteredConversations.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        text = "Keine Ergebnisse für „$searchText“",
+                        text = stringResource(Res.string.no_results_for, searchText),
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
                 }
@@ -197,7 +204,7 @@ fun ConversationListView(
                                     onDismissRequest = { isMenuExpanded = false }
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text("Umbenennen") },
+                                        text = { Text(stringResource(Res.string.context_menu_rename)) },
                                         leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) },
                                         onClick = {
                                             isMenuExpanded = false
@@ -206,16 +213,25 @@ fun ConversationListView(
                                         }
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("Teilen") },
+                                        text = { Text(stringResource(Res.string.context_menu_share)) },
                                         leadingIcon = { Icon(Icons.Default.Share, contentDescription = null) },
                                         onClick = {
                                             isMenuExpanded = false
-                                            shareText(viewModel.exportConversation(conversation), context)
+                                            shareText(
+                                                viewModel.exportConversation(
+                                                    conversation,
+                                                    exportModelLabel,
+                                                    exportUserLabel,
+                                                    exportAssistantLabel,
+                                                    exportFooter
+                                                ),
+                                                context
+                                            )
                                         }
                                     )
                                     HorizontalDivider()
                                     DropdownMenuItem(
-                                        text = { Text("Löschen", color = MaterialTheme.colorScheme.error) },
+                                        text = { Text(stringResource(Res.string.common_delete), color = MaterialTheme.colorScheme.error) },
                                         leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
                                         onClick = {
                                             isMenuExpanded = false
@@ -234,13 +250,13 @@ fun ConversationListView(
         if (renamingConversation != null) {
             AlertDialog(
                 onDismissRequest = { renamingConversation = null },
-                title = { Text("Chat umbenennen") },
+                title = { Text(stringResource(Res.string.rename_dialog_title)) },
                 text = {
                     OutlinedTextField(
                         value = renameText,
                         onValueChange = { renameText = it },
                         singleLine = true,
-                        placeholder = { Text("Neuer Titel") },
+                        placeholder = { Text(stringResource(Res.string.rename_dialog_placeholder)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 },
@@ -254,12 +270,12 @@ fun ConversationListView(
                             renamingConversation = null
                         }
                     ) {
-                        Text("Sichern")
+                        Text(stringResource(Res.string.common_save))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { renamingConversation = null }) {
-                        Text("Abbrechen")
+                        Text(stringResource(Res.string.common_cancel))
                     }
                 }
             )
@@ -288,13 +304,13 @@ fun EmptyStateView(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Keine Chats",
+                text = stringResource(Res.string.empty_state_connected_title),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Starte ein neues Gespräch mit dem Stift-Symbol oben rechts.",
+                text = stringResource(Res.string.empty_state_connected_desc),
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -308,13 +324,13 @@ fun EmptyStateView(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Nicht verbunden",
+                text = stringResource(Res.string.empty_state_disconnected_title),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Verbinde dich mit deinem Ollama- oder llama-server, um zu starten.",
+                text = stringResource(Res.string.empty_state_disconnected_desc),
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -323,7 +339,7 @@ fun EmptyStateView(
             Button(onClick = onShowSettings) {
                 Icon(Icons.Default.Wifi, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Server verbinden")
+                Text(stringResource(Res.string.empty_state_connect_button))
             }
         }
     }
