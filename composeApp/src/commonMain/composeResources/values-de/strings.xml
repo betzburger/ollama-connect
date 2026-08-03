@@ -21,7 +21,7 @@
 
     <!-- HelpView -->
     <string name="help_title">Hilfe</string>
-    <string name="help_header_tagline">Chatte mit KI-Modellen auf deinem eigenen Server – schnell, privat und ohne Cloud. Version 2.0 (KMP) © 2026 Peter Betz</string>
+    <string name="help_header_tagline">Chatte mit KI-Modellen auf deinem eigenen Server – schnell, privat und ohne Cloud. Version 2.1 (KMP) © 2026 Peter Betz</string>
 
     <string name="help_section_connection_title">Verbindung</string>
     <string name="help_connection_server_type_title">Server-Typ wählen</string>

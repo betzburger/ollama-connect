@@ -21,7 +21,7 @@
 
     <!-- HelpView -->
     <string name="help_title">Help</string>
-    <string name="help_header_tagline">Chat with AI models on your own server – fast, private, and cloud-free. Version 2.0 (KMP) © 2026 Peter Betz</string>
+    <string name="help_header_tagline">Chat with AI models on your own server – fast, private, and cloud-free. Version 2.1 (KMP) © 2026 Peter Betz</string>
 
     <string name="help_section_connection_title">Connection</string>
     <string name="help_connection_server_type_title">Choose server type</string>
