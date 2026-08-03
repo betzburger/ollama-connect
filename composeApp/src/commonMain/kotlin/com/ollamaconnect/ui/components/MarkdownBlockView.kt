@@ -217,9 +217,121 @@ fun CodeBlockView(
     }
 }
 
+// MARK: - LLM Text Normalization (LaTeX-ish math → Unicode)
+
+private val latexCommands: List<Pair<String, String>> = listOf(
+    "\\Leftrightarrow" to "⇔",
+    "\\leftrightarrow" to "↔",
+    "\\Rightarrow" to "⇒",
+    "\\rightarrow" to "→",
+    "\\Leftarrow" to "⇐",
+    "\\leftarrow" to "←",
+    "\\approx" to "≈",
+    "\\times" to "×",
+    "\\cdot" to "·",
+    "\\infty" to "∞",
+    "\\alpha" to "α",
+    "\\beta" to "β",
+    "\\gamma" to "γ",
+    "\\delta" to "δ",
+    "\\theta" to "θ",
+    "\\lambda" to "λ",
+    "\\sigma" to "σ",
+    "\\varphi" to "φ",
+    "\\omega" to "ω",
+    "\\phi" to "φ",
+    "\\neq" to "≠",
+    "\\leq" to "≤",
+    "\\geq" to "≥",
+    "\\pm" to "±",
+    "\\mu" to "μ",
+    "\\pi" to "π",
+    "\\le" to "≤",
+    "\\ge" to "≥",
+    "\\to" to "→"
+)
+
+private val superscriptMap: Map<Char, String> = mapOf(
+    '0' to "⁰", '1' to "¹", '2' to "²", '3' to "³", '4' to "⁴",
+    '5' to "⁵", '6' to "⁶", '7' to "⁷", '8' to "⁸", '9' to "⁹",
+    '+' to "⁺", '-' to "⁻", '=' to "⁼", '(' to "⁽", ')' to "⁾",
+    'n' to "ⁿ", 'i' to "ⁱ"
+)
+
+private val subscriptMap: Map<Char, String> = mapOf(
+    '0' to "₀", '1' to "₁", '2' to "₂", '3' to "₃", '4' to "₄",
+    '5' to "₅", '6' to "₆", '7' to "₇", '8' to "₈", '9' to "₉",
+    '+' to "₊", '-' to "₋", '=' to "₌", '(' to "₍", ')' to "₎",
+    'a' to "ₐ", 'e' to "ₑ", 'h' to "ₕ", 'i' to "ᵢ", 'j' to "ⱼ",
+    'k' to "ₖ", 'l' to "ₗ", 'm' to "ₘ", 'n' to "ₙ", 'o' to "ₒ",
+    'p' to "ₚ", 'r' to "ᵣ", 's' to "ₛ", 't' to "ₜ", 'u' to "ᵤ",
+    'v' to "ᵥ", 'x' to "ₓ"
+)
+
+private fun transform(text: String, map: Map<Char, String>): String =
+    text.map { map[it] ?: it.toString() }.joinToString("")
+
+/**
+ * Strips the math delimiters models like to emit ($…$, \(…\), \[…\]) and
+ * converts ^{…} / _{…} to Unicode super- and subscript characters.
+ */
+private fun replacingInlineMathSyntax(text: String): String {
+    val result = StringBuilder()
+    var i = 0
+
+    while (i < text.length) {
+        val c = text[i]
+
+        if (c == '$') {
+            i++
+            continue
+        }
+
+        if (c == '\\' && i + 1 < text.length && text[i + 1] in "()[]") {
+            i += 2
+            continue
+        }
+
+        if (c == '^' || c == '_') {
+            val isSuperscript = c == '^'
+            val map = if (isSuperscript) superscriptMap else subscriptMap
+            val next = i + 1
+            if (next < text.length) {
+                if (text[next] == '{') {
+                    val closing = text.indexOf('}', next + 1)
+                    if (closing != -1) {
+                        result.append(transform(text.substring(next + 1, closing), map))
+                        i = closing + 1
+                        continue
+                    }
+                } else {
+                    result.append(transform(text[next].toString(), map))
+                    i = next + 1
+                    continue
+                }
+            }
+        }
+
+        result.append(c)
+        i++
+    }
+
+    return result.toString()
+}
+
+/** Replaces LaTeX commands and math syntax with their Unicode equivalents. */
+fun normalizedLLMText(rawText: String): String {
+    var text = rawText
+    for ((command, replacement) in latexCommands) {
+        text = text.replace(command, replacement)
+    }
+    return replacingInlineMathSyntax(text)
+}
+
 // MARK: - Inline Markdown Parser
 
-fun parseInlineMarkdown(text: String): AnnotatedString {
+fun parseInlineMarkdown(raw: String): AnnotatedString {
+    val text = normalizedLLMText(raw)
     val builder = AnnotatedString.Builder()
     var i = 0
     while (i < text.length) {

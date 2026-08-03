@@ -75,6 +75,10 @@ actual fun formatShortDate(timestamp: Long): String {
     return sdf.format(date)
 }
 
+actual fun formatTokenCount(value: Int): String {
+    return java.text.NumberFormat.getIntegerInstance().format(value)
+}
+
 actual fun shareText(text: String, context: Any?) {
     val ctx = context as Context
     val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {

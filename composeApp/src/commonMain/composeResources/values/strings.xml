@@ -25,9 +25,9 @@
 
     <string name="help_section_connection_title">Connection</string>
     <string name="help_connection_server_type_title">Choose server type</string>
-    <string name="help_connection_server_type_desc">Choose between Ollama and llama-server. Both backends are supported — Ollama uses its native API, llama-server the OpenAI-compatible API (/v1/chat/completions).</string>
+    <string name="help_connection_server_type_desc">Choose between Ollama, llama-server, oMLX and Rapid-MLX. Ollama uses its native API, the other three the OpenAI-compatible API (/v1/chat/completions).</string>
     <string name="help_connection_ip_title">Enter IP address &amp; port</string>
-    <string name="help_connection_ip_desc">Tap the connection status in the top left and enter your server\'s IP address (e.g. 192.168.1.100). Default port: Ollama 11434, llama-server 8080.</string>
+    <string name="help_connection_ip_desc">Tap the connection status in the top left and enter your server\'s IP address (e.g. 192.168.1.100). Default port: Ollama 11434, llama-server 8080, oMLX &amp; Rapid-MLX 8000.</string>
     <string name="help_connection_reconnect_title">Reconnect</string>
     <string name="help_connection_reconnect_desc">After a disconnect, use \"Reconnect\" to restore the connection without re-entering your settings.</string>
     <string name="help_connection_saved_title">Saved servers</string>
@@ -79,6 +79,34 @@
     <string name="help_param_presence_title">Presence Penalty (0–2)</string>
     <string name="help_param_presence_desc">Penalizes tokens that already appeared — reduces infinite loops. Unsloth often recommends 1.5 for Qwen3.6.</string>
 
+    <string name="help_section_system_prompt_title">System prompt</string>
+    <string name="help_system_prompt_what_title">What is a system prompt?</string>
+    <string name="help_system_prompt_what_desc">The system prompt is a hidden instruction sent to the model ahead of your conversation. Use it to steer the model\'s behaviour.</string>
+    <string name="help_system_prompt_examples_title">Examples</string>
+    <string name="help_system_prompt_examples_desc">\"Always answer in English.\"\n\"You are an experienced Kotlin developer.\"\n\"Explain concepts as if you were explaining them to a child.\"</string>
+    <string name="help_system_prompt_default_title">Default value</string>
+    <string name="help_system_prompt_default_desc">The system prompt is stored as the default and used automatically for new chats. It can differ per chat and is saved along with that chat.</string>
+
+    <string name="help_section_presets_title">Presets</string>
+    <string name="help_presets_what_title">What are presets?</string>
+    <string name="help_presets_what_desc">A preset is a named set of model parameters (temperature, top-K, top-P, min-P, presence penalty, optionally num_ctx). One tap loads the right values for a given model.</string>
+    <string name="help_presets_builtin_title">Built-in presets</string>
+    <string name="help_presets_builtin_desc">Shipped with the app are the official Unsloth recommendations for Gemma 4 (default &amp; Ollama variant) and Qwen3.6 (thinking/instruct, each general and for coding/reasoning) plus three universal presets (precise, balanced, creative). Built-in presets cannot be deleted.</string>
+    <string name="help_presets_create_title">Creating your own presets</string>
+    <string name="help_presets_create_desc">Set the sliders to the values you want and tap \"Create new preset from current values\" in \"Manage custom presets…\". Enter a name and a short description — done.</string>
+    <string name="help_presets_edit_title">Editing/deleting your own presets</string>
+    <string name="help_presets_edit_desc">In preset management, tap one of your own presets to edit it, or use the delete button to remove it.</string>
+    <string name="help_presets_storage_title">Storage location</string>
+    <string name="help_presets_storage_desc">Custom presets live in presets.json inside the app\'s data folder. The file can be inspected or backed up directly.</string>
+
+    <string name="help_section_context_title">Context window</string>
+    <string name="help_context_message_limit_title">Message limit</string>
+    <string name="help_context_message_limit_desc">Controls how many of the most recent messages are sent along as context. \"All\" sends the entire history. A limit saves tokens and speeds up responses in long chats.</string>
+    <string name="help_context_token_limit_title">Token limit (num_ctx)</string>
+    <string name="help_context_token_limit_desc">Sets the model\'s maximum context window in tokens. \"Default\" keeps the model\'s own setting. Larger windows allow longer conversations but need more RAM on the server.</string>
+    <string name="help_context_hint_title">Context hint</string>
+    <string name="help_context_hint_desc">When the message limit is active and messages are being left out, a hint appears in the chat (e.g. \"Context: last 20 of 35 messages\"). Token counts for the last response are shown there too.</string>
+
     <string name="help_section_shortcuts_title">Keyboard shortcuts</string>
     <string name="help_shortcut_send_title">⌘ + Enter – Send message</string>
     <string name="help_shortcut_send_desc">On an external keyboard, ⌘+Enter (Command + Return) sends the message directly.</string>
@@ -109,6 +137,11 @@
     <!-- ConnectionSettingsView -->
     <string name="connection_title">Set up connection</string>
     <string name="server_header">SERVER</string>
+    <string name="server_footnote">Default port: Ollama 11434, llama-server 8080, oMLX &amp; Rapid-MLX 8000.</string>
+    <string name="system_prompt_footnote">Prepended to the model as an instruction, e.g. \"Answer in English\" or \"You are a coding assistant\".</string>
+    <string name="presets_footnote">Pick a preset for a model — the values below are set automatically. Built-in values come from the Unsloth recommendations.</string>
+    <string name="params_footnote">Temperature: creativity (0=deterministic, 2=very creative). Top-K/Top-P/Min-P: narrowing of token selection. Presence penalty (&gt;0) penalizes repetition.</string>
+    <string name="context_footnote">Message limit: how many messages are sent as context. Token limit: the model\'s maximum context window.</string>
     <string name="server_type_label">Type</string>
     <string name="server_ip_placeholder">IP address (e.g. 192.168.1.100)</string>
     <string name="server_port_placeholder">Port</string>
@@ -183,7 +216,7 @@
     <string name="empty_state_connected_title">No chats</string>
     <string name="empty_state_connected_desc">Start a new conversation using the pencil icon in the top right.</string>
     <string name="empty_state_disconnected_title">Not connected</string>
-    <string name="empty_state_disconnected_desc">Connect to your Ollama or llama-server to get started.</string>
+    <string name="empty_state_disconnected_desc">Connect to your Ollama, llama-server, oMLX or Rapid-MLX server to get started.</string>
     <string name="empty_state_connect_button">Connect to server</string>
 
     <!-- ChatBubbleView / MarkdownBlockView -->
@@ -195,6 +228,9 @@
     <string name="error_unknown_connection">Unknown connection error.</string>
     <string name="error_generation_failed">Generation error.</string>
     <string name="context_info_limited">Context: last %1$s of %2$s messages</string>
+    <string name="token_info_limit_only">Token limit: %1$s</string>
+    <string name="token_info_total">Tokens: %1$s / %2$s</string>
+    <string name="token_info_breakdown">Prompt %1$s + response %2$s</string>
     <string name="new_chat_default_title">New chat</string>
     <string name="export_model_label">Model</string>
     <string name="export_user_label">You</string>

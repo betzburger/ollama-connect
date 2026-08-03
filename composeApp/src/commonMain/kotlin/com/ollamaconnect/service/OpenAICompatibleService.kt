@@ -16,7 +16,11 @@ import ollama_connect.composeapp.generated.resources.error_connection_prefix
 import ollama_connect.composeapp.generated.resources.error_server_http
 import org.jetbrains.compose.resources.getString
 
-class LlamaServerService(
+/**
+ * Backend for every server with an OpenAI-compatible API
+ * (llama-server, oMLX, Rapid-MLX): `/v1/models` + `/v1/chat/completions`.
+ */
+class OpenAICompatibleService(
     private val host: String,
     private val port: Int,
     private val client: HttpClient
@@ -42,7 +46,7 @@ class LlamaServerService(
         model: String,
         messages: List<ChatMessage>,
         options: OllamaOptions?
-    ): Flow<String> = flow {
+    ): Flow<ChatStreamEvent> = flow {
         val url = "$baseURL/v1/chat/completions"
         val payload = OpenAIChatRequest(
             model = model,
@@ -50,6 +54,7 @@ class LlamaServerService(
                 OpenAIChatMessage(role = msg.role, content = msg.content)
             },
             stream = true,
+            streamOptions = OpenAIStreamOptions(includeUsage = true),
             temperature = options?.temperature,
             top_k = options?.topK,
             top_p = options?.topP,
@@ -87,9 +92,14 @@ class LlamaServerService(
                             null
                         }
 
+                        val usage = chunk?.usage?.tokenUsage
+                        if (usage != null && usage.resolvedTotal != null) {
+                            emit(ChatStreamEvent.Usage(usage))
+                        }
+
                         val content = chunk?.choices?.firstOrNull()?.delta?.content
                         if (!content.isNullOrEmpty()) {
-                            emit(content)
+                            emit(ChatStreamEvent.Text(content))
                         }
                     }
                 }

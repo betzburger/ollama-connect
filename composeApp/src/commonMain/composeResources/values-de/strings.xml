@@ -25,9 +25,9 @@
 
     <string name="help_section_connection_title">Verbindung</string>
     <string name="help_connection_server_type_title">Server-Typ wählen</string>
-    <string name="help_connection_server_type_desc">Wähle zwischen Ollama und llama-server. Beide Backends werden unterstützt — Ollama nutzt die native API, llama-server die OpenAI-kompatible API (/v1/chat/completions).</string>
+    <string name="help_connection_server_type_desc">Wähle zwischen Ollama, llama-server, oMLX und Rapid-MLX. Ollama nutzt seine native API, die drei anderen die OpenAI-kompatible API (/v1/chat/completions).</string>
     <string name="help_connection_ip_title">IP-Adresse &amp; Port eingeben</string>
-    <string name="help_connection_ip_desc">Tippe auf den Verbindungsstatus oben links und gib die IP-Adresse deines Servers ein (z.B. 192.168.1.100). Standard-Port: Ollama 11434, llama-server 8080.</string>
+    <string name="help_connection_ip_desc">Tippe auf den Verbindungsstatus oben links und gib die IP-Adresse deines Servers ein (z.B. 192.168.1.100). Standard-Port: Ollama 11434, llama-server 8080, oMLX &amp; Rapid-MLX 8000.</string>
     <string name="help_connection_reconnect_title">Neu verbinden</string>
     <string name="help_connection_reconnect_desc">Nach einer Unterbrechung kannst du mit \"Neu verbinden\" die Verbindung wiederherstellen, ohne die Einstellungen neu eingeben zu müssen.</string>
     <string name="help_connection_saved_title">Gespeicherte Server</string>
@@ -79,6 +79,34 @@
     <string name="help_param_presence_title">Presence Penalty (0–2)</string>
     <string name="help_param_presence_desc">Bestraft Tokens, die schon vorgekommen sind — reduziert Endlosschleifen. Unsloth empfiehlt für Qwen3.6 oft 1.5.</string>
 
+    <string name="help_section_system_prompt_title">System-Prompt</string>
+    <string name="help_system_prompt_what_title">Was ist ein System-Prompt?</string>
+    <string name="help_system_prompt_what_desc">Der System-Prompt ist eine versteckte Anweisung, die vor deiner Konversation an das Modell geschickt wird. Damit kannst du das Verhalten des Modells steuern.</string>
+    <string name="help_system_prompt_examples_title">Beispiele</string>
+    <string name="help_system_prompt_examples_desc">\"Antworte immer auf Deutsch.\"\n\"Du bist ein erfahrener Kotlin-Entwickler.\"\n\"Erkläre Konzepte so, als würdest du einem Kind erklären.\"</string>
+    <string name="help_system_prompt_default_title">Standardwert</string>
+    <string name="help_system_prompt_default_desc">Der System-Prompt wird als Standard gespeichert und automatisch für neue Chats verwendet. Pro Chat kann er abweichen und wird mit dem Chat gespeichert.</string>
+
+    <string name="help_section_presets_title">Presets</string>
+    <string name="help_presets_what_title">Was sind Presets?</string>
+    <string name="help_presets_what_desc">Ein Preset ist ein benannter Satz an Modell-Parametern (Temperature, Top-K, Top-P, Min-P, Presence Penalty, optional num_ctx). Mit einem Tipp lädst du die richtigen Werte für ein bestimmtes Modell.</string>
+    <string name="help_presets_builtin_title">Built-in Presets</string>
+    <string name="help_presets_builtin_desc">Mitgeliefert sind die offiziellen Unsloth-Empfehlungen für Gemma 4 (Standard &amp; Ollama-Variante) und Qwen3.6 (Thinking/Instruct, je allgemein und für Coding/Reasoning) sowie drei Universal-Presets (Präzise, Ausgewogen, Kreativ). Built-in-Presets können nicht gelöscht werden.</string>
+    <string name="help_presets_create_title">Eigene Presets erstellen</string>
+    <string name="help_presets_create_desc">Stelle die Slider auf deine gewünschten Werte und tippe in „Eigene Presets verwalten…“ auf „Aus aktuellen Werten neues Preset erstellen“. Gib einen Namen und eine kurze Beschreibung ein — fertig.</string>
+    <string name="help_presets_edit_title">Eigene Presets bearbeiten/löschen</string>
+    <string name="help_presets_edit_desc">In der Preset-Verwaltung tippst du ein eigenes Preset zum Bearbeiten an oder entfernst es über den Löschen-Button.</string>
+    <string name="help_presets_storage_title">Speicherort</string>
+    <string name="help_presets_storage_desc">Eigene Presets liegen als presets.json im Datenordner der App. Die Datei kann direkt inspiziert oder gesichert werden.</string>
+
+    <string name="help_section_context_title">Kontext-Fenster</string>
+    <string name="help_context_message_limit_title">Nachrichten-Limit</string>
+    <string name="help_context_message_limit_desc">Legt fest, wie viele der letzten Nachrichten als Kontext mitgesendet werden. \"Alle\" sendet den gesamten Verlauf. Ein Limit spart Tokens und beschleunigt die Antworten bei langen Chats.</string>
+    <string name="help_context_token_limit_title">Token-Limit (num_ctx)</string>
+    <string name="help_context_token_limit_desc">Setzt das maximale Kontextfenster des Modells in Tokens. \"Standard\" übernimmt die Modell-Voreinstellung. Größere Fenster ermöglichen längere Gespräche, brauchen aber mehr RAM auf dem Server.</string>
+    <string name="help_context_hint_title">Kontext-Hinweis</string>
+    <string name="help_context_hint_desc">Wenn das Nachrichten-Limit aktiv ist und Nachrichten ausgeblendet werden, erscheint ein Hinweis im Chat (z.B. \"Kontext: letzte 20 von 35 Nachrichten\"). Dort stehen auch die Token-Zahlen der letzten Antwort.</string>
+
     <string name="help_section_shortcuts_title">Tastaturkürzel</string>
     <string name="help_shortcut_send_title">⌘ + Enter – Nachricht senden</string>
     <string name="help_shortcut_send_desc">Auf einer externen Tastatur kannst du mit ⌘+Enter (Befehl + Eingabe) Nachrichten direkt abschicken.</string>
@@ -109,6 +137,11 @@
     <!-- ConnectionSettingsView -->
     <string name="connection_title">Verbindung einrichten</string>
     <string name="server_header">SERVER</string>
+    <string name="server_footnote">Standard-Port: Ollama 11434, llama-server 8080, oMLX &amp; Rapid-MLX 8000.</string>
+    <string name="system_prompt_footnote">Wird als Anweisung an das Modell vorangestellt, z.B. \"Antworte auf Deutsch\" oder \"Du bist ein Code-Assistent\".</string>
+    <string name="presets_footnote">Wähle ein Preset für ein Modell — die Werte unten werden automatisch gesetzt. Built-in-Werte stammen aus den Unsloth-Empfehlungen.</string>
+    <string name="params_footnote">Temperature: Kreativität (0=deterministisch, 2=sehr kreativ). Top-K/Top-P/Min-P: Eingrenzung der Token-Auswahl. Presence Penalty (&gt;0) bestraft Wiederholungen.</string>
+    <string name="context_footnote">Nachrichten-Limit: Wie viele Nachrichten als Kontext gesendet werden. Token-Limit: Maximales Kontextfenster des Modells.</string>
     <string name="server_type_label">Typ</string>
     <string name="server_ip_placeholder">IP-Adresse (z.B. 192.168.1.100)</string>
     <string name="server_port_placeholder">Port</string>
@@ -183,7 +216,7 @@
     <string name="empty_state_connected_title">Keine Chats</string>
     <string name="empty_state_connected_desc">Starte ein neues Gespräch mit dem Stift-Symbol oben rechts.</string>
     <string name="empty_state_disconnected_title">Nicht verbunden</string>
-    <string name="empty_state_disconnected_desc">Verbinde dich mit deinem Ollama- oder llama-server, um zu starten.</string>
+    <string name="empty_state_disconnected_desc">Verbinde dich mit deinem Ollama-, llama-server-, oMLX- oder Rapid-MLX-Server, um zu starten.</string>
     <string name="empty_state_connect_button">Server verbinden</string>
 
     <!-- ChatBubbleView / MarkdownBlockView -->
@@ -195,6 +228,9 @@
     <string name="error_unknown_connection">Unbekannter Fehler bei der Verbindung.</string>
     <string name="error_generation_failed">Generierungsfehler.</string>
     <string name="context_info_limited">Kontext: letzte %1$s von %2$s Nachrichten</string>
+    <string name="token_info_limit_only">Tokenlimit: %1$s</string>
+    <string name="token_info_total">Token: %1$s / %2$s</string>
+    <string name="token_info_breakdown">Prompt %1$s + Antwort %2$s</string>
     <string name="new_chat_default_title">Neuer Chat</string>
     <string name="export_model_label">Modell</string>
     <string name="export_user_label">Du</string>

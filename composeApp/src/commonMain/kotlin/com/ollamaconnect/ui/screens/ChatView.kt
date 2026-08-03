@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ollamaconnect.formatTokenCount
 import com.ollamaconnect.ui.components.ChatBubbleView
 import com.ollamaconnect.viewmodel.ChatViewModel
 import ollama_connect.composeapp.generated.resources.Res
@@ -27,6 +28,10 @@ import ollama_connect.composeapp.generated.resources.chat_input_placeholder
 import ollama_connect.composeapp.generated.resources.content_desc_send
 import ollama_connect.composeapp.generated.resources.content_desc_stop_generation
 import ollama_connect.composeapp.generated.resources.context_info_limited
+import ollama_connect.composeapp.generated.resources.context_token_default
+import ollama_connect.composeapp.generated.resources.token_info_breakdown
+import ollama_connect.composeapp.generated.resources.token_info_limit_only
+import ollama_connect.composeapp.generated.resources.token_info_total
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -99,12 +104,41 @@ fun ChatView(
             null
         }
 
+        val tokenInfo = viewModel.tokenInfo?.let { info ->
+            val limitLabel = if (info.limit > 0) {
+                formatTokenCount(info.limit)
+            } else {
+                stringResource(Res.string.context_token_default)
+            }
+            if (info.total == null) {
+                stringResource(Res.string.token_info_limit_only, limitLabel)
+            } else {
+                val parts = mutableListOf(
+                    stringResource(Res.string.token_info_total, formatTokenCount(info.total), limitLabel)
+                )
+                if (info.promptTokens != null && info.completionTokens != null) {
+                    parts.add(
+                        stringResource(
+                            Res.string.token_info_breakdown,
+                            formatTokenCount(info.promptTokens),
+                            formatTokenCount(info.completionTokens)
+                        )
+                    )
+                }
+                parts.joinToString(" · ")
+            }
+        }
+
+        val statusInfo = listOfNotNull(contextInfo, tokenInfo)
+            .takeIf { it.isNotEmpty() }
+            ?.joinToString(" · ")
+
         AnimatedVisibility(
-            visible = contextInfo != null,
+            visible = statusInfo != null,
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            val info = contextInfo
+            val info = statusInfo
             if (info != null) {
                 ContextInfoBanner(message = info)
             }

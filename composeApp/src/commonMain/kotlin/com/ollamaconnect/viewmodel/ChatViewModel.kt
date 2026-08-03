@@ -100,6 +100,7 @@ class ChatViewModel(
     var isLoadingModels by mutableStateOf(false)
     var isGenerating by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
+    var lastTokenUsage by mutableStateOf<TokenUsage?>(null)
 
     private var streamJob: Job? = null
 
@@ -108,14 +109,39 @@ class ChatViewModel(
     val canSend: Boolean
         get() = inputText.trim().isNotEmpty() && isConnected && !isGenerating && selectedModel.isNotEmpty()
 
+    /**
+     * Token counters for the last response, ready for display. Returns the
+     * raw numbers; the caller supplies the localized labels.
+     */
+    val tokenInfo: TokenInfo?
+        get() {
+            val total = lastTokenUsage?.resolvedTotal
+            if (total == null) {
+                return if (contextTokenLimit > 0) TokenInfo(limit = contextTokenLimit) else null
+            }
+            return TokenInfo(
+                limit = contextTokenLimit,
+                total = total,
+                promptTokens = lastTokenUsage?.promptTokens,
+                completionTokens = lastTokenUsage?.completionTokens
+            )
+        }
+
+    data class TokenInfo(
+        val limit: Int,
+        val total: Int? = null,
+        val promptTokens: Int? = null,
+        val completionTokens: Int? = null
+    )
+
     val connectionService: ChatService?
         get() {
             val trimmedHost = host.trim()
             if (trimmedHost.isEmpty()) return null
             val portInt = port.toIntOrNull() ?: return null
-            return when (serverKind) {
-                ServerKind.OLLAMA -> OllamaService(trimmedHost, portInt, httpClient)
-                ServerKind.LLAMA_SERVER -> LlamaServerService(trimmedHost, portInt, httpClient)
+            return when (serverKind.apiFlavor) {
+                APIFlavor.OLLAMA -> OllamaService(trimmedHost, portInt, httpClient)
+                APIFlavor.OPENAI -> OpenAICompatibleService(trimmedHost, portInt, httpClient)
             }
         }
 
@@ -189,6 +215,7 @@ class ChatViewModel(
         messages.clear()
         currentConversation = null
         errorMessage = null
+        lastTokenUsage = null
         systemPrompt = settings.getString("oc_systemPrompt", "")
     }
 
@@ -226,6 +253,7 @@ class ChatViewModel(
     fun loadConversation(conversation: Conversation) {
         stopGeneration()
         currentConversation = conversation
+        lastTokenUsage = null
         messages.clear()
         messages.addAll(
             conversation.persistedMessages
@@ -299,6 +327,7 @@ class ChatViewModel(
 
         isGenerating = true
         errorMessage = null
+        lastTokenUsage = null
 
         var history = messages.take(messages.size - 1).toList()
         if (contextMessageLimit > 0 && history.size > contextMessageLimit) {
@@ -323,11 +352,18 @@ class ChatViewModel(
         streamJob = viewModelScope.launch {
             try {
                 var rawBuffer = ""
-                service.streamChat(model, history, options).cancellable().collect { chunk ->
-                    rawBuffer += chunk
-                    messages[assistantIndex] = messages[assistantIndex].copy(
-                        content = rawBuffer.strippingHiddenBlocks()
-                    )
+                service.streamChat(model, history, options).cancellable().collect { event ->
+                    when (event) {
+                        is ChatStreamEvent.Text -> {
+                            rawBuffer += event.content
+                            messages[assistantIndex] = messages[assistantIndex].copy(
+                                content = rawBuffer.strippingHiddenBlocks()
+                            )
+                        }
+                        is ChatStreamEvent.Usage -> {
+                            lastTokenUsage = event.usage
+                        }
+                    }
                 }
                 finalizeAssistantMessage(assistantIndex, rawBuffer)
                 persistMessages()

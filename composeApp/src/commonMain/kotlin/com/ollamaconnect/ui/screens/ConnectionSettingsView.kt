@@ -102,34 +102,48 @@ fun ServerCard(viewModel: ChatViewModel) {
         ) {
             Text(stringResource(Res.string.server_header), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
-            // Typ Segmented Control
+            // Server type dropdown — a segmented control would truncate the
+            // longer labels ("llama-server", "Rapid-MLX") at this width.
+            var typeMenuExpanded by remember { mutableStateOf(false) }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { typeMenuExpanded = true }
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(Res.string.server_type_label), fontSize = 15.sp, modifier = Modifier.weight(1f))
-                Row(
-                    modifier = Modifier
-                        .width(220.dp)
-                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(8.dp))
-                        .padding(2.dp),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                Text(stringResource(Res.string.server_type_label), fontSize = 15.sp)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        viewModel.serverKind.displayName,
+                        fontSize = 15.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                }
+
+                DropdownMenu(
+                    expanded = typeMenuExpanded,
+                    onDismissRequest = { typeMenuExpanded = false }
                 ) {
                     ServerKind.entries.forEach { kind ->
-                        val selected = viewModel.serverKind == kind
-                        val containerColor = if (selected) MaterialTheme.colorScheme.surface else Color.Transparent
-                        val textColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .background(containerColor, RoundedCornerShape(6.dp))
-                                .clickable { viewModel.setServerKindValue(kind) }
-                                .padding(vertical = 6.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(kind.displayName, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = textColor)
-                        }
+                        DropdownMenuItem(
+                            text = { Text(kind.displayName) },
+                            onClick = {
+                                viewModel.setServerKindValue(kind)
+                                typeMenuExpanded = false
+                            },
+                            trailingIcon = {
+                                if (viewModel.serverKind == kind) {
+                                    Icon(
+                                        Icons.Default.Check,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        )
                     }
                 }
             }
@@ -172,8 +186,21 @@ fun ServerCard(viewModel: ChatViewModel) {
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
+            CardFootnote(stringResource(Res.string.server_footnote))
         }
     }
+}
+
+/** Explanatory text below a settings card. */
+@Composable
+fun CardFootnote(text: String) {
+    Text(
+        text,
+        fontSize = 12.sp,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(top = 2.dp)
+    )
 }
 
 @Composable
@@ -274,6 +301,7 @@ fun SystemPromptCard(viewModel: ChatViewModel) {
                     .heightIn(min = 80.dp, max = 140.dp),
                 shape = RoundedCornerShape(10.dp)
             )
+            CardFootnote(stringResource(Res.string.system_prompt_footnote))
         }
     }
 }
@@ -383,6 +411,8 @@ fun PresetsCard(viewModel: ChatViewModel, onManagePresets: () -> Unit) {
                 Text(stringResource(Res.string.presets_manage_link), fontSize = 15.sp)
                 Icon(Icons.Default.ArrowRight, contentDescription = null)
             }
+
+            CardFootnote(stringResource(Res.string.presets_footnote))
         }
     }
 }
@@ -471,6 +501,8 @@ fun ModelParametersCard(viewModel: ChatViewModel) {
                     viewModel.clearActivePreset()
                 }
             )
+
+            CardFootnote(stringResource(Res.string.params_footnote))
         }
     }
 }
@@ -609,6 +641,8 @@ fun ContextCard(viewModel: ChatViewModel) {
                     }
                 }
             }
+
+            CardFootnote(stringResource(Res.string.context_footnote))
         }
     }
 }

@@ -21,4 +21,7 @@ expect fun formatTime(timestamp: Long): String
 
 expect fun formatShortDate(timestamp: Long): String
 
+/** Formats a token count with the platform's grouping separator (e.g. 16.384). */
+expect fun formatTokenCount(value: Int): String
+
 expect fun shareText(text: String, context: Any?)

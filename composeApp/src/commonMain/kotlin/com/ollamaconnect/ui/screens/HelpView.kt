@@ -183,6 +183,64 @@ fun HelpView(
                 )
             )
 
+            // System-Prompt
+            HelpSection(
+                icon = Icons.Default.Notes,
+                iconColor = Color(0xFF0EA5E9),
+                title = stringResource(Res.string.help_section_system_prompt_title),
+                items = listOf(
+                    HelpItemInfo(
+                        Icons.Default.PostAdd,
+                        Res.string.help_system_prompt_what_title,
+                        Res.string.help_system_prompt_what_desc
+                    ),
+                    HelpItemInfo(
+                        Icons.Default.Lightbulb,
+                        Res.string.help_system_prompt_examples_title,
+                        Res.string.help_system_prompt_examples_desc
+                    ),
+                    HelpItemInfo(
+                        Icons.Default.Memory,
+                        Res.string.help_system_prompt_default_title,
+                        Res.string.help_system_prompt_default_desc
+                    )
+                )
+            )
+
+            // Presets
+            HelpSection(
+                icon = Icons.Default.Layers,
+                iconColor = Color(0xFF6366F1),
+                title = stringResource(Res.string.help_section_presets_title),
+                items = listOf(
+                    HelpItemInfo(
+                        Icons.Default.Layers,
+                        Res.string.help_presets_what_title,
+                        Res.string.help_presets_what_desc
+                    ),
+                    HelpItemInfo(
+                        Icons.Default.Verified,
+                        Res.string.help_presets_builtin_title,
+                        Res.string.help_presets_builtin_desc
+                    ),
+                    HelpItemInfo(
+                        Icons.Default.AddCircle,
+                        Res.string.help_presets_create_title,
+                        Res.string.help_presets_create_desc
+                    ),
+                    HelpItemInfo(
+                        Icons.Default.Edit,
+                        Res.string.help_presets_edit_title,
+                        Res.string.help_presets_edit_desc
+                    ),
+                    HelpItemInfo(
+                        Icons.Default.Description,
+                        Res.string.help_presets_storage_title,
+                        Res.string.help_presets_storage_desc
+                    )
+                )
+            )
+
             // Parameter
             HelpSection(
                 icon = Icons.Default.Tune,
@@ -213,6 +271,30 @@ fun HelpView(
                         Icons.Default.Repeat,
                         Res.string.help_param_presence_title,
                         Res.string.help_param_presence_desc
+                    )
+                )
+            )
+
+            // Kontext-Fenster
+            HelpSection(
+                icon = Icons.Default.Window,
+                iconColor = Color(0xFFF59E0B),
+                title = stringResource(Res.string.help_section_context_title),
+                items = listOf(
+                    HelpItemInfo(
+                        Icons.Default.Message,
+                        Res.string.help_context_message_limit_title,
+                        Res.string.help_context_message_limit_desc
+                    ),
+                    HelpItemInfo(
+                        Icons.Default.Memory,
+                        Res.string.help_context_token_limit_title,
+                        Res.string.help_context_token_limit_desc
+                    ),
+                    HelpItemInfo(
+                        Icons.Default.Info,
+                        Res.string.help_context_hint_title,
+                        Res.string.help_context_hint_desc
                     )
                 )
             )

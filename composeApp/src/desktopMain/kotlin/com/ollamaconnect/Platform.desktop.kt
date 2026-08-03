@@ -78,6 +78,10 @@ actual fun formatShortDate(timestamp: Long): String {
     return sdf.format(date)
 }
 
+actual fun formatTokenCount(value: Int): String {
+    return java.text.NumberFormat.getIntegerInstance().format(value)
+}
+
 actual fun shareText(text: String, context: Any?) {
     try {
         val selection = java.awt.datatransfer.StringSelection(text)

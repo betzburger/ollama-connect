@@ -6,13 +6,30 @@ import kotlinx.serialization.Serializable
 
 // MARK: - Server Kind
 
+/** Which HTTP API dialect a backend speaks. */
+enum class APIFlavor {
+    OLLAMA,
+    OPENAI
+}
+
 @Serializable
-enum class ServerKind(val rawValue: String, val displayName: String, val defaultPort: Int) {
+enum class ServerKind(
+    val rawValue: String,
+    val displayName: String,
+    val defaultPort: Int,
+    val apiFlavor: APIFlavor
+) {
     @SerialName("ollama")
-    OLLAMA("ollama", "Ollama", 11434),
+    OLLAMA("ollama", "Ollama", 11434, APIFlavor.OLLAMA),
 
     @SerialName("llama_server")
-    LLAMA_SERVER("llama_server", "llama-server", 8080);
+    LLAMA_SERVER("llama_server", "llama-server", 8080, APIFlavor.OPENAI),
+
+    @SerialName("omlx")
+    OMLX("omlx", "oMLX", 8000, APIFlavor.OPENAI),
+
+    @SerialName("rapid_mlx")
+    RAPID_MLX("rapid_mlx", "Rapid-MLX", 8000, APIFlavor.OPENAI);
 
     companion object {
         fun fromRaw(raw: String): ServerKind {
@@ -112,8 +129,23 @@ data class OllamaMessagePayload(
 data class OllamaChatChunk(
     val message: OllamaMessagePayload? = null,
     val done: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    @SerialName("prompt_eval_count") val promptEvalCount: Int? = null,
+    @SerialName("eval_count") val evalCount: Int? = null
 )
+
+// MARK: - Token Usage
+
+data class TokenUsage(
+    val promptTokens: Int? = null,
+    val completionTokens: Int? = null,
+    val totalTokens: Int? = null
+) {
+    val resolvedTotal: Int?
+        get() = totalTokens ?: listOfNotNull(promptTokens, completionTokens)
+            .takeIf { it.isNotEmpty() }
+            ?.sum()
+}
 
 // MARK: - OpenAI-compatible API Models (llama-server)
 
@@ -132,11 +164,17 @@ data class OpenAIChatRequest(
     val model: String,
     val messages: List<OpenAIChatMessage>,
     val stream: Boolean,
+    @SerialName("stream_options") val streamOptions: OpenAIStreamOptions? = null,
     val temperature: Double? = null,
     @SerialName("top_k") val top_k: Int? = null,
     @SerialName("top_p") val top_p: Double? = null,
     @SerialName("min_p") val min_p: Double? = null,
     @SerialName("presence_penalty") val presence_penalty: Double? = null
+)
+
+@Serializable
+data class OpenAIStreamOptions(
+    @SerialName("include_usage") val includeUsage: Boolean
 )
 
 @Serializable
@@ -147,8 +185,23 @@ data class OpenAIChatMessage(
 
 @Serializable
 data class OpenAIChatChunk(
-    val choices: List<OpenAIChoice>
+    val choices: List<OpenAIChoice> = emptyList(),
+    val usage: OpenAIUsage? = null
 )
+
+@Serializable
+data class OpenAIUsage(
+    @SerialName("prompt_tokens") val promptTokens: Int? = null,
+    @SerialName("completion_tokens") val completionTokens: Int? = null,
+    @SerialName("total_tokens") val totalTokens: Int? = null
+) {
+    val tokenUsage: TokenUsage
+        get() = TokenUsage(
+            promptTokens = promptTokens,
+            completionTokens = completionTokens,
+            totalTokens = totalTokens
+        )
+}
 
 @Serializable
 data class OpenAIChoice(

@@ -40,7 +40,7 @@ class OllamaService(
         model: String,
         messages: List<ChatMessage>,
         options: OllamaOptions?
-    ): Flow<String> = flow {
+    ): Flow<ChatStreamEvent> = flow {
         val url = "$baseURL/api/chat"
         val payload = OllamaChatRequest(
             model = model,
@@ -79,9 +79,17 @@ class OllamaService(
                         }
                         val content = chunk.message?.content
                         if (!content.isNullOrEmpty()) {
-                            emit(content)
+                            emit(ChatStreamEvent.Text(content))
                         }
                         if (chunk.done) {
+                            val usage = TokenUsage(
+                                promptTokens = chunk.promptEvalCount,
+                                completionTokens = chunk.evalCount,
+                                totalTokens = null
+                            )
+                            if (usage.resolvedTotal != null) {
+                                emit(ChatStreamEvent.Usage(usage))
+                            }
                             break
                         }
                     }
