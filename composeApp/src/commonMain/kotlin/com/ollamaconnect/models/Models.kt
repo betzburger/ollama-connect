@@ -45,7 +45,8 @@ data class SavedHost(
     val id: String = generateUUID(),
     val address: String,
     val port: Int,
-    val kind: ServerKind
+    val kind: ServerKind,
+    val apiKey: String = ""
 )
 
 // MARK: - Chat Message

@@ -23,15 +23,25 @@ import org.jetbrains.compose.resources.getString
 class OpenAICompatibleService(
     private val host: String,
     private val port: Int,
-    private val client: HttpClient
+    private val client: HttpClient,
+    private val apiKey: String = ""
 ) : ChatService {
 
     private val baseURL: String
         get() = "http://$host:$port"
 
+    private fun HttpRequestBuilder.applyAuth() {
+        val trimmedKey = apiKey.trim()
+        if (trimmedKey.isNotEmpty()) {
+            header(HttpHeaders.Authorization, "Bearer $trimmedKey")
+        }
+    }
+
     override suspend fun fetchModels(): List<OllamaModelInfo> {
         val url = "$baseURL/v1/models"
-        val response = client.get(url)
+        val response = client.get(url) {
+            applyAuth()
+        }
         if (response.status != HttpStatusCode.OK) {
             throw Exception(getString(Res.string.error_server_http, response.status.value))
         }
@@ -69,6 +79,7 @@ class OpenAICompatibleService(
             client.preparePost(url) {
                 contentType(ContentType.Application.Json)
                 header("Accept", "text/event-stream")
+                applyAuth()
                 setBody(bodyString)
             }.execute { response ->
                 if (response.status != HttpStatusCode.OK) {

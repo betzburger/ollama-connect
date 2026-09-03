@@ -54,6 +54,7 @@ class ChatViewModel(
     var host by mutableStateOf(settings.getString("oc_host", ""))
     var serverKind by mutableStateOf(ServerKind.fromRaw(settings.getString("oc_serverKind", ServerKind.OLLAMA.rawValue)))
     var port by mutableStateOf(loadInitialPort())
+    var apiKey by mutableStateOf(settings.getString("oc_apiKey", ""))
     var savedHosts = mutableStateListOf<SavedHost>()
 
     private fun portKey(kind: ServerKind): String = "oc_port_${kind.rawValue}"
@@ -140,10 +141,14 @@ class ChatViewModel(
             if (trimmedHost.isEmpty()) return null
             val portInt = port.toIntOrNull() ?: return null
             return when (serverKind.apiFlavor) {
-                APIFlavor.OLLAMA -> OllamaService(trimmedHost, portInt, httpClient)
-                APIFlavor.OPENAI -> OpenAICompatibleService(trimmedHost, portInt, httpClient)
+                APIFlavor.OLLAMA -> OllamaService(trimmedHost, portInt, httpClient, apiKey)
+                APIFlavor.OPENAI -> OpenAICompatibleService(trimmedHost, portInt, httpClient, apiKey)
             }
         }
+
+    fun saveApiKeyDefault() {
+        settings.setString("oc_apiKey", apiKey)
+    }
 
     init {
         loadSavedHosts()
@@ -495,6 +500,8 @@ class ChatViewModel(
     fun selectHost(saved: SavedHost) {
         host = saved.address
         port = saved.port.toString()
+        apiKey = saved.apiKey
+        settings.setString("oc_apiKey", apiKey)
         if (saved.kind != serverKind) {
             serverKind = saved.kind
             settings.setString("oc_serverKind", saved.kind.rawValue)
@@ -520,7 +527,7 @@ class ChatViewModel(
         settings.setString("oc_serverKind", serverKind.rawValue)
 
         savedHosts.removeAll { it.address == trimmedHost && it.kind == serverKind }
-        savedHosts.add(0, SavedHost(address = trimmedHost, port = portInt, kind = serverKind))
+        savedHosts.add(0, SavedHost(address = trimmedHost, port = portInt, kind = serverKind, apiKey = apiKey))
 
         if (savedHosts.size > 8) {
             val trimmedList = savedHosts.take(8)

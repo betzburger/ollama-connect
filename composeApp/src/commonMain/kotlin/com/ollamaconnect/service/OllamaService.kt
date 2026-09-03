@@ -19,15 +19,25 @@ import org.jetbrains.compose.resources.getString
 class OllamaService(
     private val host: String,
     private val port: Int,
-    private val client: HttpClient
+    private val client: HttpClient,
+    private val apiKey: String = ""
 ) : ChatService {
 
     private val baseURL: String
         get() = "http://$host:$port"
 
+    private fun HttpRequestBuilder.applyAuth() {
+        val trimmedKey = apiKey.trim()
+        if (trimmedKey.isNotEmpty()) {
+            header(HttpHeaders.Authorization, "Bearer $trimmedKey")
+        }
+    }
+
     override suspend fun fetchModels(): List<OllamaModelInfo> {
         val url = "$baseURL/api/tags"
-        val response = client.get(url)
+        val response = client.get(url) {
+            applyAuth()
+        }
         if (response.status != HttpStatusCode.OK) {
             throw Exception(getString(Res.string.error_server_http, response.status.value))
         }
@@ -57,6 +67,7 @@ class OllamaService(
         try {
             client.preparePost(url) {
                 contentType(ContentType.Application.Json)
+                applyAuth()
                 setBody(bodyString)
             }.execute { response ->
                 if (response.status != HttpStatusCode.OK) {

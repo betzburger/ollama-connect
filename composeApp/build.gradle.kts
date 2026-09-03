@@ -70,8 +70,8 @@ android {
         applicationId = "com.ollamaconnect"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 2
-        versionName = "2.1.0"
+        versionCode = 3
+        versionName = "2.2.0"
     }
     
     packaging {
@@ -100,7 +100,7 @@ compose.desktop {
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi
             )
-            packageVersion = "2.1.0"
+            packageVersion = "2.2.0"
             packageName = "Ollama Connect"
 
             windows {

@@ -137,7 +137,7 @@
     <!-- ConnectionSettingsView -->
     <string name="connection_title">Verbindung einrichten</string>
     <string name="server_header">SERVER</string>
-    <string name="server_footnote">Standard-Port: Ollama 11434, llama-server 8080, oMLX &amp; Rapid-MLX 8000.</string>
+    <string name="server_footnote">Standard-Port: Ollama 11434, llama-server 8080, oMLX &amp; Rapid-MLX 8000. API-Code wird als \"Authorization: Bearer …\" gesendet, falls dein Server ihn verlangt.</string>
     <string name="system_prompt_footnote">Wird als Anweisung an das Modell vorangestellt, z.B. \"Antworte auf Deutsch\" oder \"Du bist ein Code-Assistent\".</string>
     <string name="presets_footnote">Wähle ein Preset für ein Modell — die Werte unten werden automatisch gesetzt. Built-in-Werte stammen aus den Unsloth-Empfehlungen.</string>
     <string name="params_footnote">Temperature: Kreativität (0=deterministisch, 2=sehr kreativ). Top-K/Top-P/Min-P: Eingrenzung der Token-Auswahl. Presence Penalty (&gt;0) bestraft Wiederholungen.</string>
@@ -145,6 +145,7 @@
     <string name="server_type_label">Typ</string>
     <string name="server_ip_placeholder">IP-Adresse (z.B. 192.168.1.100)</string>
     <string name="server_port_placeholder">Port</string>
+    <string name="server_apikey_placeholder">API-Code (optional)</string>
     <string name="connection_header">VERBINDUNG</string>
     <string name="connection_connected_badge">Verbunden</string>
     <string name="connection_connecting">Verbinde mit %1$s...</string>

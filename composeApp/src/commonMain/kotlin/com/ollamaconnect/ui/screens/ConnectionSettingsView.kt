@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ollamaconnect.models.ServerKind
@@ -179,6 +180,28 @@ fun ServerCard(viewModel: ChatViewModel) {
                     },
                     placeholder = { Text(stringResource(Res.string.server_port_placeholder)) },
                     singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+
+            // API Key
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Key, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(end = 12.dp))
+                OutlinedTextField(
+                    value = viewModel.apiKey,
+                    onValueChange = {
+                        viewModel.apiKey = it
+                        viewModel.saveApiKeyDefault()
+                    },
+                    placeholder = { Text(stringResource(Res.string.server_apikey_placeholder)) },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent

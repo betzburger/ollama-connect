@@ -137,7 +137,7 @@
     <!-- ConnectionSettingsView -->
     <string name="connection_title">Set up connection</string>
     <string name="server_header">SERVER</string>
-    <string name="server_footnote">Default port: Ollama 11434, llama-server 8080, oMLX &amp; Rapid-MLX 8000.</string>
+    <string name="server_footnote">Default port: Ollama 11434, llama-server 8080, oMLX &amp; Rapid-MLX 8000. API key is sent as \"Authorization: Bearer …\" if your server requires it.</string>
     <string name="system_prompt_footnote">Prepended to the model as an instruction, e.g. \"Answer in English\" or \"You are a coding assistant\".</string>
     <string name="presets_footnote">Pick a preset for a model — the values below are set automatically. Built-in values come from the Unsloth recommendations.</string>
     <string name="params_footnote">Temperature: creativity (0=deterministic, 2=very creative). Top-K/Top-P/Min-P: narrowing of token selection. Presence penalty (&gt;0) penalizes repetition.</string>
@@ -145,6 +145,7 @@
     <string name="server_type_label">Type</string>
     <string name="server_ip_placeholder">IP address (e.g. 192.168.1.100)</string>
     <string name="server_port_placeholder">Port</string>
+    <string name="server_apikey_placeholder">API key (optional)</string>
     <string name="connection_header">CONNECTION</string>
     <string name="connection_connected_badge">Connected</string>
     <string name="connection_connecting">Connecting to %1$s…</string>
