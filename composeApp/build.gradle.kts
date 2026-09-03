@@ -151,7 +151,7 @@ tasks.register<Jar>("packageUberJarForAllPlatforms") {
     group = "compose desktop"
     description = "Assembles a fat jar bundling Skiko native libraries for every supported desktop platform."
     archiveBaseName.set("ollama-connect-all-platforms")
-    archiveVersion.set("2.0.0")
+    archiveVersion.set("2.2.0")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {

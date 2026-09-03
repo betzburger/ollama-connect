@@ -5,7 +5,7 @@ set -euo pipefail
 
 ARCH_TAG="$1"
 APP_NAME="Ollama Connect"
-VERSION="2.0.0"
+VERSION="2.2.0"
 
 APP_IMAGE_SRC=$(find composeApp/build/compose/binaries/main-release/app -mindepth 1 -maxdepth 1 -type d | head -1)
 echo "jpackage app-image source: $APP_IMAGE_SRC"
